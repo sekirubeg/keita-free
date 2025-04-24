@@ -13,7 +13,7 @@
 
 <body>
   <header class="header">
-    <div class="header__logo">
+    <div class="header__logo" style="margin-left: 2vw;">
       <a href="{{ route('index') }}">
         <img src="{{ asset('images/logo.svg') }}" alt="Attendance Management Logo">
       </a>
@@ -23,7 +23,7 @@
       <ul>
         <form action="{{ route('index') }}" method="get">
             @csrf
-            <input type="text" name="search" placeholder="　　　なにをお探しですか？" value="{{ request('search') }}" style="width: 400px; height: 35px; border-radius: 3px; border: 1px solid #ccc; margin-right: 50px; padding-left: 10px;">
+            <input type="text" name="search" placeholder="　　　なにをお探しですか？" value="{{ request('search') }}" style="width: 35vw; height: 35px; border-radius: 3px; border: 1px solid #ccc; margin-right: 50px; padding-left: 10px;">
         </form>
         @auth
           <li><a href="{{ route('logout') }}">ログアウト</a></li>
