@@ -29,7 +29,7 @@
           <li><a href="{{ route('logout') }}">ログアウト</a></li>
         @else
           <li><a href="{{ route('login') }}">ログイン</a></li>
-          <li><a href="{{ route('register') }}">登録</a></li>
+          <li><a href="{{ route('register') }}">会員登録</a></li>
           <li class="selling"><a href="" style="color: black;">出品</a></li>
         @endauth
       </ul>
