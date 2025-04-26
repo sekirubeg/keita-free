@@ -1,14 +1,14 @@
 <?php
 
+use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Route::get('/', function () {
-    return view('index');
-})->name('index');
+Route::get('/', [ItemController::class, 'index'])->name('index');
+
 
 Route::get('/register', function () {
     return view('auth.register');
@@ -17,3 +17,5 @@ Route::get('/register', function () {
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
+
+
