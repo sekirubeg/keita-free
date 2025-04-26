@@ -1,0 +1,18 @@
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-card{
+    display: flex;
+    gap: 5vw;
+
+}
+
+.profile-info{
+    display: flex;
+    gap: 20vw;
+}
+
+

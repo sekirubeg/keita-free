@@ -34,7 +34,7 @@
                         <button type="submit"
                             style="background:transparent; color:#fff; border:none; cursor: pointer; font-size:16px;">ログアウト</button>
                     </form>
-                    <li><a href="">マイページ</a></li>
+                    <li><a href="{{ route('mypage') }}">マイページ</a></li>
                     <li class="selling"><a href="" style="color: black;">出品</a></li>
                 @else
                     <li><a href="{{ route('login') }}">ログイン</a></li>
