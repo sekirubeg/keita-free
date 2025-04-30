@@ -9,11 +9,9 @@ class Comment extends Model
 {
     /** @use HasFactory<\Database\Factories\CommentFactory> */
     use HasFactory;
+
     protected $guarded = [];
-    protected static function booted()
-    {
-        static::preventLazyLoading(false);
-    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

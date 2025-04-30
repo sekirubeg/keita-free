@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ヘッダー</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
     @yield('css')
 </head>
 
@@ -35,7 +36,7 @@
                             style="background:transparent; color:#fff; border:none; cursor: pointer; font-size:16px;">ログアウト</button>
                     </form>
                     <li><a href="{{ route('mypage') }}">マイページ</a></li>
-                    <li class="selling"><a href="" style="color: black;">出品</a></li>
+                    <li class="selling"><a href="{{ route('item.create') }}" style="color: black;">出品</a></li>
                 @else
                     <li><a href="{{ route('login') }}">ログイン</a></li>
                     <li><a href="{{ route('register') }}">会員登録</a></li>
