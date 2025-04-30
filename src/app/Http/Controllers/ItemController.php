@@ -22,6 +22,25 @@ class ItemController extends Controller
         $tags = Tag::get();
         return view('item.create', compact('tags'));
     }
+    public function store(Request $request)
+    {
+
+        $item = new Item();
+        $item->name = $request->name;
+        $item->description = $request->description;
+        $item->user_id = Auth::id();
+        $item->price = $request->price;
+        $item->brand = $request->brand;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images', 'public');
+            $item->image_at = $path;
+        }
+        $item->save();
+        $item->tags()->sync($request->tags);
+
+
+        return redirect()->route('index');
+    }
 
     public function show($id)
     {

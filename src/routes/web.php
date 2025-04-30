@@ -29,6 +29,7 @@ Route::post('mypage/profile', [MypageController::class, 'update'])->name('mypage
 
 
 Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
+Route::post('/item', [ItemController::class, 'store'])->name('item.store');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
 
 

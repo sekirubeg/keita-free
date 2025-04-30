@@ -78,7 +78,7 @@
         @foreach ($items as $item)
             <div class="col-md-3 mb-4" style="cursor: pointer;">
                 <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
-                    <img src="{{ $item->image_at }}" class="card-img-top"
+                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}" class="card-img-top"
                         style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body">
                         <h5 class="card-title">{{ $item->name }}</h5>
