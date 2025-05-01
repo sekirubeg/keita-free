@@ -1,0 +1,19 @@
+        .btn-success:hover,
+        .btn-success:focus,
+        .btn-success:active {
+            color: red;
+        }
+
+        .btn-success {
+            color: red;
+        }
+
+        .btn-outline-success:hover,
+        .btn-outline-success:focus,
+        .btn-outline-success:active {
+            color: black;
+        }
+
+        .btn-outline-success {
+            color: black;
+        }

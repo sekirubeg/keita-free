@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -17,11 +19,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +42,50 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    public function likes()
+    {
+        return $this->belongsToMany(Item::class, 'likes', 'user_id', 'item_id')->withTimestamps();
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    public function like($itemId)
+    {
+        $exist = $this->is_liked($itemId);
+        if ($exist) {
+            return false;
+        } else{
+            $this->likes()->attach($itemId);
+            return true;
+        }
+    }
+    public function unlike($itemId)
+    {
+        $exist = $this->is_liked($itemId);
+        if ($exist) {
+            $this->likes()->detach($itemId);
+            return true;
+        } else{
+            return false;
+        }
+    }
+    public function is_liked($itemId)
+    {
+        return $this->likes()->where('item_id', $itemId)->exists();
     }
 }
