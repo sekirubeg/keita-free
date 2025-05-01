@@ -28,7 +28,7 @@ Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.e
 Route::post('mypage/profile', [MypageController::class, 'update'])->name('mypage.update');
 
 
-Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
+Route::get('/item/create/{item}', [ItemController::class, 'create'])->name('item.create');
 Route::post('/item', [ItemController::class, 'store'])->name('item.store');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
 

@@ -17,6 +17,18 @@ class Item extends Model
         static::preventLazyLoading(false);
     }
 
+    const STATUS_LABELS = [
+        1 => '良好',
+        2 => '目立った傷や汚れなし',
+        3 => 'やや傷や汚れあり',
+        4 => '状態が悪い',
+    ];
+
+    public function getStatusLabelAttribute()
+    {
+        return self::STATUS_LABELS[$this->status] ?? '不明';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -36,7 +36,7 @@
                             style="background:transparent; color:#fff; border:none; cursor: pointer; font-size:16px;">ログアウト</button>
                     </form>
                     <li><a href="{{ route('mypage') }}">マイページ</a></li>
-                    <li class="selling"><a href="{{ route('item.create') }}" style="color: black;">出品</a></li>
+                    <li class="selling"><a href="{{ route('item.create' , ['item' => $item->id])}}" style="color: black;">出品</a></li>
                 @else
                     <li><a href="{{ route('login') }}">ログイン</a></li>
                     <li><a href="{{ route('register') }}">会員登録</a></li>
