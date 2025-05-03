@@ -41,6 +41,6 @@ class MypageController extends Controller
         };
         $user->save();
 
-        return redirect()->route('mypage');
+        return redirect()->route('index');
     }
 }

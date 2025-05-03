@@ -6,6 +6,8 @@ use App\Http\Controllers\MypageController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
 use App\Models\Item;
 
 // Route::get('/', function () {
@@ -18,13 +20,16 @@ Route::get('/mylist', [ItemController::class, 'mylist'])->name('mylist');
 
 
 
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
+Route::post('/login', [LoginController::class, 'store']);
 
 Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
 Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
