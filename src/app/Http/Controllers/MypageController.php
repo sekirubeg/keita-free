@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 
 class MypageController extends Controller
 {
     //
-    public function index()
+    public function index(Item $item)
     {
         $user = Auth::user();
-        return view('mypage.profile' , compact('user'));
+
+        $items = $user->items()->paginate(8);
+
+        return view('mypage.profile' , compact('user', 'item', 'items'));
     }
-    public function edit()
+    public function edit(Item $item)
     {
         $user = Auth::user();
-        return view('mypage.edit' , compact('user'));
+        return view('mypage.edit' , compact('user', 'item'));
     }
 
     public function update(Request $request)

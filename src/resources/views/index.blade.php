@@ -70,8 +70,8 @@
 
 @section('content')
     <div class="index__title">
-        <p class="caption recommend">おすすめ</p>
-        <p class="caption">マイリスト</p>
+        <a class="caption recommend">おすすめ</a>
+        <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
     </div>
 
     <div class="row unity">

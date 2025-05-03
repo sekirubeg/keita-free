@@ -10,13 +10,25 @@ use Illuminate\support\Facades\Auth;
 use Illuminate\support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
+use function PHPSTORM_META\map;
+
 class ItemController extends Controller
 {
     //
+
     public function index()
     {
         $items = Item::paginate(8);
         return view('index', compact("items"));
+    }
+    public function mylist()
+    {
+        $id = Auth::id();
+        $user = User::with(['items', 'likes' => function ($query) {
+            $query->withCount('likes');
+        }])->find($id);
+        $items = $user->likes()->paginate(8);
+        return view('item.mylist', compact("items"));
     }
     public function create(Item $item){
         $tags = Tag::get();
@@ -44,7 +56,8 @@ class ItemController extends Controller
 
     public function show($id)
     {
+        $user = Auth::user();
         $item = Item::with(['tags','comments', 'user'])->withCount('likes')->withCount('comments')->find($id);
-        return view('item.show', compact("item"));
+        return view('item.show', compact("item", "user"));
     }
 }
