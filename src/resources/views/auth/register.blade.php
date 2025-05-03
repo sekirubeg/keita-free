@@ -15,34 +15,47 @@
     @csrf
     <div class="register__form__input">
       <label for="name">ユーザ-名</label>
-      <input type="text" name="name" id="name" required>
+      <input type="text" name="name" id="name" value="{{ old('name') }}" required>
     </div>
+    @error('name')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
 
     <div class="register__form__input">
       <label for="email">メールアドレス</label>
-      <input type="email" name="email" id="email" required >
+      <input type="email" name="email" id="email" value="{{ old('email') }}" required >
     </div>
+    @error('email')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
 
     <div class="register__form__input">
       <label for="password">パスワード</label>
-      <input type="password" name="password" id="password" required>
+      <input type="password" name="password" id="password"  required>
     </div>
+    @error('password')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
 
     <div class="register__form__input">
       <label for="password_confirmation">確認用パスワード</label>
       <input type="password" name="password_confirmation" id="password_confirmation" required>
     </div>
+    @error('password_confirmation')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
     <button type="submit" class="register__button">登録する</button>
   </form>
     <div class="register__form__link">
         <a href="{{ route('login') }}" style="text-decoration: none; color:#0073CC;">ログインはこちら</a>
     </div>
-  @if ($errors->any())
-    <div class="error-messages">
-      @foreach ($errors->all() as $error)
-        <p>{{ $error }}</p>
-      @endforeach
-    </div>
-  @endif
 </div>
 @endsection

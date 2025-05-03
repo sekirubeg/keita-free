@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
@@ -66,12 +67,17 @@
             display: none;
         }
     </style>
+
 @endsection
 
 @section('content')
     <div class="index__title">
         <a class="caption recommend">おすすめ</a>
-        <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+        @if(Auth::check())
+            <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+        @else
+            <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+        @endif
     </div>
 
     <div class="row unity">
@@ -82,7 +88,7 @@
                     style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body">
                         <h5 class="card-title">{{ $item->name }}</h5>
-                        <p class="card-text">{{ $item->price }}</p>
+                        <p class="card-text">¥{{ number_format($item->price) }}</p>
 
                     </div>
                 </a>

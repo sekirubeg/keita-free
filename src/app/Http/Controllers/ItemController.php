@@ -16,10 +16,17 @@ class ItemController extends Controller
 {
     //
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::paginate(8);
-        return view('index', compact("items"));
+        $search = $request->input('search');
+        if ($search) {
+            $items = Item::where('name', 'LIKE', "%{$search}%")->paginate(8);
+        } else {
+            $items = Item::with(['tags', 'user'])->withCount('likes')->withCount('comments')->paginate(8);
+        }
+        return view('index', compact("items", "search"));
+
+
     }
     public function mylist()
     {

@@ -122,8 +122,8 @@
 
 
               <div class="mt-3">
-    <img src="{{ $imageSrc }}" class="img-thumbnail" style="max-width: 150px;" id="img">
-</div>
+                <img src="{{ asset('storage/' .'images/blank_image.png') }}" class="img-thumbnail" style="max-width: 150px;" id="img">
+            </div>
 
 
             <h2

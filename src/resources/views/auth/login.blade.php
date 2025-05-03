@@ -18,11 +18,21 @@
       <label for="email">メールアドレス</label>
       <input type="email" name="email" id="email" required >
     </div>
+    @error('email')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
 
     <div class="login__form__input">
       <label for="password">パスワード</label>
       <input type="password" name="password" id="password" required>
     </div>
+    @error('password')
+      <div class="error-message">
+        {{ $message }}
+      </div>
+    @enderror
 
 
     <button type="submit" class="login__button">ログインする</button>
@@ -30,13 +40,7 @@
     <div class="login__form__link">
         <a href="{{ route('register') }}" style="text-decoration: none; color:#0073CC;">会員登録はこちら</a>
     </div>
-  @if ($errors->any())
-    <div class="error-messages">
-      @foreach ($errors->all() as $error)
-        <p>{{ $error }}</p>
-      @endforeach
-    </div>
-  @endif
+ 
 
 </div>
 
