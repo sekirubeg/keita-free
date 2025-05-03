@@ -72,7 +72,7 @@
 
             {{-- 右側：商品情報 --}}
             <div class="col-md-5">
-                <h2 class="mb-2" style="font-size:2.5rem;">{{ $item->name }}</h2>
+                <h2 class="mb-2" style="font-size:2.5rem; font-weight:bold;">{{ $item->name }}</h2>
                 <p class="text-muted">{{ $item->brand }}</p>
 
                 <div class="d-flex align-items-center mb-3">
@@ -126,7 +126,7 @@
 
 
                 @if (Auth::user()->id !== $item->user_id)
-                    <form action="" method="">
+                    <form action="{{ route('item.purchase', $item->id) }}" method="get">
                         @csrf
                         <button type="submit" class="btn btn-danger w-100 mb-4"
                             style="font-weight:600; background-color:#ff5555; border:none;">購入手続きへ</button>
@@ -158,16 +158,24 @@
                     @forelse ($item->comments as $comment)
                         <div class="card mb-2" style="padding:0;">
                             <div class="card-body" style="padding: 15px 20px;">
-                                <div style="display: flex; align-items:center; margin-bottom:;">
-                                    <img src="{{ asset('storage/' . $comment->user->image_at) }}" alt="プロフィール画像"
-                                        class="profile-icon-small" style="margin-right: 15px;">
-                                    <p style="margin-bottom: 0;">{{ $comment->user->name }}</p>
+                                <div
+                                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                    <!-- 左側：アイコン＋名前 -->
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="{{ asset('storage/' . $comment->user->image_at) }}" alt="プロフィール画像"
+                                            class="profile-icon-small"
+                                            style="margin-right: 15px; height: 40px; width: 40px; border-radius: 50%; overflow: hidden;">
+                                        <p style="margin-bottom: 0;">{{ $comment->user->name }}</p>
+                                    </div>
+
+                                    <!-- 右側：日付 -->
+                                    <p style="margin-bottom: 0; font-size: 0.9em; color: gray;">
+                                        {{ $comment->created_at->format('Y / n / j') }}</p>
                                 </div>
-                                <p style="font-size:18px; margin-top:5px; margin-bottom:5px;">{{ $comment->body }}</p>
+                                <p style="font-size:18px; margin-left:1vw; margin-top:5px; margin-bottom:5px;">
+                                    {{ $comment->body }}</p>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <small class="text-muted">
-                                        投稿日：{{ $comment->created_at }}
-                                    </small>
+
                                     @if (Auth::user()->id === $comment->user_id)
                                         <form action="{{ route('comment.destroy', $comment->id) }}" method="POST">
                                             @csrf
@@ -179,11 +187,11 @@
                             </div>
                         </div>
                     @empty
-                    <div style="padding: 0 20px 20px 20px;">
-                        <img src="{{ asset('storage/' . $item->user->image_at) }}"
-                            class="profile-icon-small" style="margin-right: 15px;">
-                        <p>{{ $item->user->name }}</p>
-                    </div>
+                        <div style="padding: 0 20px 20px 20px;  display:flex; align-items:center;">
+                            <img src="{{ asset('storage/' . $user->image_at) }}" class="profile-icon-small"
+                                style=" height:50px; width:50px; border-radius:50%; overflow:hidden; margin-right: 2vw;">
+                            <p style="margin:0;">{{ $user->name }}</p>
+                        </div>
                         <p style="background-color:#e5e5e5; padding:15px;">こちらにコメントが入ります。</p>
                     @endforelse
                 </div>
@@ -199,9 +207,6 @@
                     </div>
                 </form>
             </div>
-
         </div>
-
-
     </div>
 @endsection
