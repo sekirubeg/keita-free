@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ExhibitionRequest;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\Order;
 use Illuminate\support\Facades\Auth;
 use Illuminate\support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +20,20 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+
+
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            if ($search === '') {
+                session()->forget('search'); // ← 検索欄が空ならセッションを削除
+            } else {
+                session(['search' => $search]);
+            }
+        }
+
+        $search = session('search');
         if ($search) {
             $items = Item::where('name', 'LIKE', "%{$search}%")->paginate(8);
         } else {
@@ -28,20 +43,25 @@ class ItemController extends Controller
 
 
     }
-    public function mylist()
+    public function mylist(Request $request)
     {
+
+        $search = session('search');
         $id = Auth::id();
         $user = User::with(['items', 'likes' => function ($query) {
             $query->withCount('likes');
         }])->find($id);
-        $items = $user->likes()->paginate(8);
-        return view('item.mylist', compact("items"));
+        $items = $user->likes()->where('name', 'LIKE', "%{$search}%")
+        ->withCount('likes')->paginate(8);
+
+        return view('item.mylist', compact("items", "search"));
     }
+
     public function create(Item $item){
         $tags = Tag::get();
         return view('item.create', compact('tags', 'item'));
     }
-    public function store(Request $request)
+    public function store(ExhibitionRequest $request)
     {
 
         $item = new Item();

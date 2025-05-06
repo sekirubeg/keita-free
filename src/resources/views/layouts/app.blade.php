@@ -26,7 +26,7 @@
             <ul>
                 <form action="{{ route('index') }}" method="get">
                     @csrf
-                    <input type="text" name="search" placeholder="　　　なにをお探しですか？" value="{{ request('search') }}"
+                    <input type="text" name="search" placeholder="　　　なにをお探しですか？" value="{{ old('search', session('search')) }}"
                         style="width: 35vw; height: 35px; border-radius: 3px; border: 1px solid #ccc; margin-right: 1vw; padding-left: 10px;">
                 </form>
                 @auth

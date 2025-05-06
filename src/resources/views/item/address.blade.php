@@ -49,6 +49,11 @@
     margin-top: 3vh;
     font-size: 14px;
 }
+.error-message {
+    color: red;
+    font-size: 14px;
+
+}
 </style>
 
 @endsection
@@ -60,34 +65,35 @@
     <h1 style="font-weight: bold;">住所の変更</h1>
   </div>
 
-  <form action="" method="POST" class="register__form">
+  <form action="{{ route('address.store', $item->id) }}" method="POST" class="register__form">
     @csrf
     <div class="address__form__input">
       <label for="post_code">郵便番号</label>
-      <input type="post_code" name="" id="post_code" required >
+      <input type="text" name="post_code" id="post_code" required >
     </div>
+    @error('post_code')
+        <div class="error-message">{{ $message }}</div>
+    @enderror
 
     <div class="address__form__input">
       <label for="address">住所</label>
-      <input type="address" name="address" id="address" required>
+      <input type="text" name="address" id="address" required>
     </div>
-
+    @error('address')
+        <div class="error-message">{{ $message }}</div>
+    @enderror
      <div class="address__form__input">
       <label for="building">建物名</label>
-      <input type="building" name="building" id="building" required>
+      <input type="text" name="building" id="building" required>
     </div>
-
-
+    @error('building')
+        <div class="error-message">{{ $message }}</div>
+    @enderror
+    <input type="text" name="name" value="name" style="display: none;">
     <button type="submit" class="address__button" style="font-weight: bold;">更新する</button>
   </form>
 
-  @if ($errors->any())
-    <div class="error-messages">
-      @foreach ($errors->all() as $error)
-        <p>{{ $error }}</p>
-      @endforeach
-    </div>
-  @endif
+
 
 </div>
 @endsection

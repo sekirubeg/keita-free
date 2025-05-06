@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('post_code');
             $table->string('address');
-            $table->string('building')->nullable();
+            $table->string('building');
             $table->timestamps();
         });
     }

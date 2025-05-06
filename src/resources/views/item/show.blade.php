@@ -124,15 +124,21 @@
                     </div>
                 @endif
 
-
-                @if (Auth::user()->id !== $item->user_id)
-                    <form action="{{ route('item.purchase', $item->id) }}" method="get">
+                @guest
+                    <form action="{{ route('login') }}" method="get">
                         @csrf
                         <button type="submit" class="btn btn-danger w-100 mb-4"
                             style="font-weight:600; background-color:#ff5555; border:none;">購入手続きへ</button>
                     </form>
-                @endif
-
+                @else
+                    @if (Auth::user()->id !== $item->user_id)
+                        <form action="{{ route('item.purchase', $item->id) }}" method="get">
+                            @csrf
+                            <button type="submit" class="btn btn-danger w-100 mb-4"
+                                style="font-weight:600; background-color:#ff5555; border:none;">購入手続きへ</button>
+                        </form>
+                    @endif
+                @endguest
 
                 {{-- 商品説明 --}}
                 <h4 class="fw-bold mt-4 mb-4">商品説明</h4>
@@ -175,37 +181,63 @@
                                 <p style="font-size:18px; margin-left:1vw; margin-top:5px; margin-bottom:5px;">
                                     {{ $comment->body }}</p>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-
-                                    @if (Auth::user()->id === $comment->user_id)
-                                        <form action="{{ route('comment.destroy', $comment->id) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-sm"><small>削除する</small></button>
-                                        </form>
-                                    @endif
+                                    @guest
+                                    @else
+                                        @if (Auth::user()->id === $comment->user_id)
+                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm"><small>削除する</small></button>
+                                            </form>
+                                        @endif
+                                    @endguest
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <div style="padding: 0 20px 20px 20px;  display:flex; align-items:center;">
-                            <img src="{{ asset('storage/' . $user->image_at) }}" class="profile-icon-small"
-                                style=" height:50px; width:50px; border-radius:50%; overflow:hidden; margin-right: 2vw;">
-                            <p style="margin:0;">{{ $user->name }}</p>
-                        </div>
-                        <p style="background-color:#e5e5e5; padding:15px;">こちらにコメントが入ります。</p>
+                        @guest
+                            <div style="padding: 0 20px 20px 20px; display:flex; align-items:center;">
+                                <img src="{{ asset('storage/' . 'images/default.png') }}" class="profile-icon-small"
+                                    style=" height:50px; width:50px; border-radius:50%; overflow:hidden; margin-right: 2vw;">
+                                <p style="margin:0;">admin</p>
+                            </div>
+                            <p style="background-color:#e5e5e5; padding:15px;">こちらにコメントが入ります。</p>
+                        @else
+                            <div style="padding: 0 20px 20px 20px;  display:flex; align-items:center;">
+                                <img src="{{ asset('storage/' . $user->image_at) }}" class="profile-icon-small"
+                                    style=" height:50px; width:50px; border-radius:50%; overflow:hidden; margin-right: 2vw;">
+                                <p style="margin:0;">{{ $user->name }}</p>
+                            </div>
+                            <p style="background-color:#e5e5e5; padding:15px;">こちらにコメントが入ります。</p>
+
+                        @endguest
                     @endforelse
                 </div>
-                <form action="{{ route('comment.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="item_id" value="{{ $item->id }}">
-                    <div class="mb-3">
-                        <textarea name="body" class="form-control mt-5" rows="7" placeholder="商品へのコメント" required></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-danger w-100 mt-4"
-                            style="font-weight:600; background-color:#ff5555; border:none;">コメントを送信する</button>
-                    </div>
-                </form>
+                @guest
+                    <form action="{{ route('login') }}" method="get">
+                        @csrf
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                        <div class="mb-3">
+                            <textarea name="body" class="form-control mt-5" rows="7" placeholder="商品へのコメント" required></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-danger w-100 mt-4"
+                                style="font-weight:600; background-color:#ff5555; border:none;">コメントを送信する</button>
+                        </div>
+                    </form>
+                @else
+                        <form action="{{ route('comment.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                        <div class="mb-3">
+                            <textarea name="body" class="form-control mt-5" rows="7" placeholder="商品へのコメント" required></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-danger w-100 mt-4"
+                                style="font-weight:600; background-color:#ff5555; border:none;">コメントを送信する</button>
+                        </div>
+                    </form>
+                @endguest
             </div>
         </div>
     </div>

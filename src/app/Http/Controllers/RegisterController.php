@@ -22,6 +22,6 @@ class RegisterController extends Controller
 
         Auth::login($user); // 自動ログイン
 
-        return redirect()->route('mypage.edit'); // 登録後にリダイレクト
+        return redirect()->route('mypage.edit');
     }
 }

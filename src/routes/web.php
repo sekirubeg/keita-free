@@ -46,6 +46,8 @@ Route::delete('/likes/{id}', [LikeController::class, 'destroy'])->name('unlike')
 
 Route::get('purchase/{id}', [PurchaseController::class, 'index'])->name('item.purchase');
 Route::get('purchase/address/{id}', [PurchaseController::class, 'address'])->name('item.address');
+Route::post('purchase/address/{id}', [PurchaseController::class, 'change'])->name('address.store');
 
 Route::post('/comments', [CommentController::class, 'store'])->name('comment.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+
