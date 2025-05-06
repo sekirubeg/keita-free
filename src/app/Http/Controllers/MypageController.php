@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use App\Models\User;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AddressRequest;
 
 class MypageController extends Controller
 {
     //
-    public function index(Item $item)
+    public function index()
     {
         $user = Auth::user();
 
-        $items = $user->items()->paginate(8);
+        $items = $user->items()->withCount('likes')->paginate(8);
 
-        return view('mypage.profile' , compact('user', 'item', 'items'));
+        return view('mypage.profile' , compact('user', 'items'));
     }
     public function edit(Item $item)
     {
@@ -24,7 +25,7 @@ class MypageController extends Controller
         return view('mypage.edit' , compact('user', 'item'));
     }
 
-    public function update(Request $request)
+    public function update(AddressRequest $request)
     {
         $user = Auth::user();
         $user->name = $request->name;

@@ -82,7 +82,7 @@
                     style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body">
                         <h5 class="card-title">{{ $item->name }}</h5>
-                        <p class="card-text">{{ $item->price }}</p>
+                        <p class="card-text">¥{{ number_format($item->price) }}</p>
 
                     </div>
                 </a>

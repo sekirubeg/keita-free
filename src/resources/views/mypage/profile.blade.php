@@ -31,7 +31,6 @@
         .profile-card {
             display: flex;
             gap: 5vw;
-
         }
 
         .profile-info {
@@ -85,6 +84,7 @@
             color: #fff;
         }
 
+
         .pagination .page-item.active .page-link {
             background-color: #000;
             /* 現在ページは完全な黒 */
@@ -137,11 +137,14 @@
                 <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
                     <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
                         class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
-                    <div class="card-body">
+                    <div class="card-body" style="display: flex; justify-content: space-between; ">
+                        <div>
                         <h5 class="card-title">{{ $item->name }}</h5>
                         <p class="card-text">{{ $item->price }}</p>
-
+                        </div>
+                        <p>いいね数：{{ $item->likes_count }}</p>
                     </div>
+
                 </a>
             </div>
         @endforeach

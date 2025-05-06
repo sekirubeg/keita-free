@@ -5,16 +5,15 @@
 
     $imagePath = $item->image_at ?? '';
     $imageIsExternal = Str::startsWith($imagePath, 'http');
-    $isValidImage = Str::endsWith(Str::lower($imagePath), '.jpg') ||
-                    Str::endsWith(Str::lower($imagePath), '.jpeg') ||
-                    Str::endsWith(Str::lower($imagePath), '.png');
+    $isValidImage =
+        Str::endsWith(Str::lower($imagePath), '.jpg') ||
+        Str::endsWith(Str::lower($imagePath), '.jpeg') ||
+        Str::endsWith(Str::lower($imagePath), '.png');
 
     $imageSrc = '';
 
     if (!empty($imagePath) && $isValidImage) {
-        $imageSrc = $imageIsExternal
-            ? $imagePath
-            : asset('storage/' . $imagePath);
+        $imageSrc = $imageIsExternal ? $imagePath : asset('storage/' . $imagePath);
     } else {
         $imageSrc = asset('images/blank_image.png'); // デフォルト画像
     }
@@ -98,6 +97,11 @@
             height: auto;
             margin-top: 10px;
         }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
     </style>
 @endsection
 
@@ -117,12 +121,15 @@
                         class="image-upload-button">画像を選択する</button>
                 </div>
             </div>
-
+            @error('image_at')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
             {{-- このonchangeがプレビューを表示させる。 --}}
 
 
-              <div class="mt-3">
-                <img src="{{ asset('storage/' .'images/blank_image.png') }}" class="img-thumbnail" style="max-width: 150px;" id="img">
+            <div class="mt-3">
+                <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail" style="max-width: 150px;"
+                    id="img">
             </div>
 
 
@@ -141,6 +148,9 @@
                     @endforeach
                 </div>
             </div>
+            @error('tags')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
             <div class="mb-3">
                 <label for="condition" class="form-label">商品の状態</label>
                 <select class="form-select" id="condition" name="status" required>
@@ -151,30 +161,41 @@
                     <option value="4">状態が悪い</option>
                 </select>
             </div>
+            @error('status')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
             <h2
                 style="color:#5f5f5f; font-weight:700; border-bottom: 1px solid #5f5f5f; padding-bottom:10px; margin-top:50px">
                 商品名と説明</h2>
 
             <div class="mb-3">
                 <label for="name" class="form-label">商品名</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
             </div>
+            @error('name')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
             <div class="mb-3">
                 <label for="brand" class="form-label">ブランド名</label>
-                <input type="text" class="form-control" id="brand" name="brand">
+                <input type="text" class="form-control" id="brand" name="brand" value="{{ old('brand') }}" >
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">商品の説明</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description') }}</textarea>
             </div>
-
+            @error('description')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
             <div class="mb-3">
                 <label for="price" class="form-label">販売価格</label>
                 <div class="input-group">
                     <span class="input-group-text">￥</span>
-                    <input type="number" class="form-control" id="price" name="price" required>
+                    <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}"  required>
                 </div>
             </div>
+            @error('price')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
 
 
             <div class="mb-3">

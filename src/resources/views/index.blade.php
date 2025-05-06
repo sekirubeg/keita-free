@@ -76,7 +76,7 @@
         @if(Auth::check())
             <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
         @else
-            <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+            <a class="caption" href="{{ route('login') }}">マイリスト</a>
         @endif
     </div>
 
@@ -97,6 +97,6 @@
     </div>
 
     <div class="d-flex justify-content-center">
-        {{ $items->links('pagination::bootstrap-5') }}
+        {{ $items->appends(['search' => request('search')])->links('pagination::bootstrap-5') }}
     </div>
 @endsection
