@@ -2,22 +2,35 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\User;
 use App\Models\Item;
+use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
 
+
 class MypageController extends Controller
 {
     //
-    public function index()
-    {
-        $user = Auth::user();
+    public function index(Request $request)
+{
+    $user = Auth::user();
+    $page = $request->query('page', 'sell'); // デフォルトは "sell"
+
+    if ($page === 'buy') {
+            // 購入した商品（orders 経由で item を取得）
+            $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
+                ->withCount('likes')
+                ->paginate(8);
+
+            return view('mypage.purchased', compact('user', 'items'));
+    } else {
+        // 出品した商品
         $items = $user->items()->withCount('likes')->paginate(8);
         return view('mypage.profile', compact('user', 'items'));
     }
+}
+
     public function edit(Item $item)
     {
         $user = Auth::user();
@@ -42,14 +55,5 @@ class MypageController extends Controller
         $user->save();
         return redirect()->route('index');
     }
-    public function purchased()
-    {
-        $user = Auth::user();
-        // ログインユーザーが購入した item を取得
-        $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
-            ->withCount('likes')
-            ->paginate(8);
 
-        return view('mypage.purchased', compact('user', 'items'));
-    }
 }

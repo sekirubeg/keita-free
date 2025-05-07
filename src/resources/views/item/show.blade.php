@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', '商品詳細')
 @section('css')
     <script>
         document.addEventListener("DOMContentLoaded", function() {

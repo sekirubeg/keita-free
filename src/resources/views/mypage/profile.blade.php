@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'プロフィール')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -141,8 +141,8 @@
         </div>
     </div>
     <div class="index__title">
-        <a class="caption recommend">出品した商品</a>
-        <a class="caption" href="{{ route('mypage.purchased') }}">購入した商品</a>
+        <a class="caption {{ request()->get('page') === 'sell' || request()->get('page') === null ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'sell']) }}">出品した商品</a>
+        <a class="caption {{ request()->get('page') === 'buy' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
     </div>
     <div class="row unity">
         @foreach ($items as $item)

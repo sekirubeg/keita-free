@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', '住所変更')
 
 @section('css')
     <style>

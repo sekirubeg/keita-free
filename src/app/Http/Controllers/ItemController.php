@@ -9,41 +9,15 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\Order;
 use Illuminate\support\Facades\Auth;
-use Illuminate\support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-
-use function PHPSTORM_META\map;
 
 class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        // $sort = $request->input('sort', 'desc');
-        // $searchInput = $request->input('search');
-        // if ($request->has('search')) {
-        //     $search = $request->input('search');
-
-        //     if ($search === '') {
-        //         session()->forget('search');
-        //     } else {
-        //         session(['search' => $search]);
-        //     }
-        // }
-
-        // $itemIds = Order::pluck('item_id')->toArray();
-
-        // $search = session('search');
-        // if ($search) {
-        //     $items = Item::where('name', 'LIKE', "%{$search}%")->when(Auth::check(), function ($query) {
-        //         return $query->where('user_id', '!=', Auth::id());
-        //     })->orderBy('created_at', $sort)->paginate(8);
-        // } else {
-        //     $items = Item::with(['tags', 'user'])->withCount('likes')->when(Auth::check(), function ($query) {
-        // return $query->where('user_id', '!=', Auth::id());})->withCount('comments')->orderBy('created_at', $sort)->paginate(8);
-        // }
-        // return view('index', compact("items", "search", "itemIds", "sort"));
+        
         $sort = $request->input('sort', 'desc');
         $searchInput = $request->input('search');
+        $pageType = $request->query('page', 'all'); // デフォルトは 'all'
 
         if ($request->has('search')) {
             if ($searchInput === '') {
@@ -55,6 +29,19 @@ class ItemController extends Controller
 
         $search = $searchInput ?? session('search');
         $itemIds = Order::pluck('item_id')->toArray();
+
+        if ($pageType === 'mylist' && Auth::check()) {
+        // マイリスト表示（いいねした商品）
+        $user = Auth::user();
+        $items = $user->likes()
+            ->where('name', 'LIKE', "%{$search}%")
+            ->with('tags', 'user')
+            ->withCount(['likes', 'comments'])
+            ->orderBy('created_at', $sort)
+            ->paginate(8);
+
+        return view('index', compact('items', 'search', 'itemIds', 'sort', 'pageType'));
+    }
 
         $itemsQuery = Item::with(['tags', 'user'])
             ->withCount(['likes', 'comments'])
@@ -69,19 +56,6 @@ class ItemController extends Controller
         $items = $itemsQuery->paginate(8);
 
         return view('index', compact('items', 'search', 'itemIds', 'sort'));
-    }
-    public function mylist(Request $request)
-    {
-        $sort = $request->input('sort', 'desc');
-        $search = session('search');
-        $id = Auth::id();
-        $user = User::with(['items', 'likes' => function ($query) {
-            $query->withCount('likes');
-        }])->find($id);
-        $items = $user->likes()->where('name', 'LIKE', "%{$search}%")
-            ->withCount('likes')->orderBy('created_at', $sort)->paginate(8);
-        $itemIds = Order::pluck('item_id')->toArray();
-        return view('item.mylist', compact("items", "search", "itemIds", "sort"));
     }
 
     public function create(Item $item)

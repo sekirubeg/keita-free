@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'プロフィール')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -100,6 +100,19 @@
         .text-muted {
             display: none;
         }
+         .profile-buttons .profile {
+            color: #ff5555;
+            background-color: transparent;
+            border: 1px solid #ff5555;
+            font-weight: bold;
+            padding: 7px 25px;
+            transition: 0.3s;
+        }
+
+        .profile-buttons .profile:hover {
+            background-color: #ff5555;
+            color: white;
+        }
     </style>
 @endsection
 
@@ -119,8 +132,7 @@
 
 
                     <div class="profile-buttons">
-                        <a href="{{ route('mypage.edit') }}" class="btn btn-primary profile"
-                            style="color: #ff5555 ; background-color:transparent; border:1px solid #ff5555; font-weight:bold; padding:7px 25px">プロフィールを編集</a>
+                        <a href="{{ route('mypage.edit') }}" class="btn btn-primary profile">プロフィールを編集</a>
 
                     </div>
                 </div>

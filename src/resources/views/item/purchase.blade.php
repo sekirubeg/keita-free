@@ -2,6 +2,8 @@
 @php
     $selectedPayment = session('purchase_payment_id');
 @endphp
+
+@section('title', '購入確認')
 @section('css')
     <script>
         document.addEventListener('DOMContentLoaded', function() {

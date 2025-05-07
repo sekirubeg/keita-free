@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', '商品出品')
 @php
     use Illuminate\Support\Str;
 

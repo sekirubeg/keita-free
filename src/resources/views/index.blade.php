@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
+@section('title', '商品一覧')
 @section('css')
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
@@ -71,9 +73,9 @@
 
 @section('content')
     <div class="index__title" style="margin-bottom: 5vh;">
-        <a class="caption recommend">おすすめ</a>
+        <a class="caption {{ ($pageType ?? 'all') === 'all' ? 'recommend' : '' }}" href="{{ route('index') }}">おすすめ</a>
         @if (Auth::check())
-            <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+            <a class="caption {{ ($pageType ?? 'all') === 'mylist' ? 'recommend' : '' }}" href="{{ route('index', ['page' => 'mylist']) }}" href="{{ route('mylist') }}">マイリスト</a>
         @else
             <a class="caption" href="{{ route('login') }}">マイリスト</a>
         @endif
