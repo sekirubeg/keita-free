@@ -20,9 +20,6 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-
-
-
         if ($request->has('search')) {
             $search = $request->input('search');
 
@@ -33,28 +30,30 @@ class ItemController extends Controller
             }
         }
 
+        $sort = $request->input('sort', 'desc');
+
+        $itemIds = Order::pluck('item_id')->toArray();
+
         $search = session('search');
         if ($search) {
-            $items = Item::where('name', 'LIKE', "%{$search}%")->paginate(8);
+            $items = Item::where('name', 'LIKE', "%{$search}%")->orderBy('created_at', $sort)->paginate(8);
         } else {
-            $items = Item::with(['tags', 'user'])->withCount('likes')->withCount('comments')->paginate(8);
+            $items = Item::with(['tags', 'user'])->withCount('likes')->withCount('comments')->orderBy('created_at', $sort)->paginate(8);
         }
-        return view('index', compact("items", "search"));
-
-
+        return view('index', compact("items", "search", "itemIds", "sort"));
     }
     public function mylist(Request $request)
     {
-
+        $sort = $request->input('sort', 'desc');
         $search = session('search');
         $id = Auth::id();
         $user = User::with(['items', 'likes' => function ($query) {
             $query->withCount('likes');
         }])->find($id);
         $items = $user->likes()->where('name', 'LIKE', "%{$search}%")
-        ->withCount('likes')->paginate(8);
-
-        return view('item.mylist', compact("items", "search"));
+        ->withCount('likes')->orderBy('created_at', $sort)->paginate(8);
+        $itemIds = Order::pluck('item_id')->toArray();
+        return view('item.mylist', compact("items", "search", "itemIds", "sort"));
     }
 
     public function create(Item $item){
@@ -85,6 +84,7 @@ class ItemController extends Controller
     {
         $user = Auth::user();
         $item = Item::with(['tags','comments', 'user'])->withCount('likes')->withCount('comments')->find($id);
-        return view('item.show', compact("item", "user"));
+        $itemIds = Order::pluck('item_id')->toArray();
+        return view('item.show', compact("item", "user", "itemIds"));
     }
 }

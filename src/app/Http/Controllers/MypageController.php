@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Item;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
 
@@ -17,12 +18,12 @@ class MypageController extends Controller
 
         $items = $user->items()->withCount('likes')->paginate(8);
 
-        return view('mypage.profile' , compact('user', 'items'));
+        return view('mypage.profile', compact('user', 'items'));
     }
     public function edit(Item $item)
     {
         $user = Auth::user();
-        return view('mypage.edit' , compact('user', 'item'));
+        return view('mypage.edit', compact('user', 'item'));
     }
 
     public function update(AddressRequest $request)
@@ -43,5 +44,16 @@ class MypageController extends Controller
         $user->save();
 
         return redirect()->route('index');
+    }
+    public function purchased()
+    {
+        $user = Auth::user();
+
+        // ログインユーザーが購入した item を取得
+        $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
+            ->withCount('likes')
+            ->paginate(8);
+
+        return view('mypage.purchased', compact('user', 'items'));
     }
 }

@@ -12,7 +12,7 @@
     <h1>ログイン</h1>
   </div>
 
-  <form action="{{ route('login') }}" method="POST" class="register__form">
+  <form action="{{ route('login') }}" method="POST" class="register__form" novalidate>
     @csrf
     <div class="login__form__input">
       <label for="email">メールアドレス</label>

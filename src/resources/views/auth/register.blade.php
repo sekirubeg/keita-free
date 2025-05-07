@@ -11,11 +11,11 @@
     <h1>会員登録</h1>
   </div>
 
-  <form action="{{ route('register') }}" method="POST" class="register__form">
+  <form action="{{ route('register') }}" method="POST" class="register__form" novalidate>
     @csrf
     <div class="register__form__input">
       <label for="name">ユーザ-名</label>
-      <input type="text" name="name" id="name" value="{{ old('name') }}" required>
+      <input type="text" name="name" id="name" value="{{ old('name') }}"  required>
     </div>
     @error('name')
       <div class="error-message">

@@ -63,16 +63,25 @@
 @section('content')
     <div class="container py-5">
         <div class="row">
-
+            @php
+                $isSold = in_array($item->id, $itemIds);
+            @endphp
             {{-- 左側：商品画像 --}}
             <div class="col-md-6 text-center">
                 <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
                     class="img-fluid" style="max-height: 40vh; object-fit: contain;">
+
             </div>
 
             {{-- 右側：商品情報 --}}
             <div class="col-md-5">
                 <h2 class="mb-2" style="font-size:2.5rem; font-weight:bold;">{{ $item->name }}</h2>
+                @if ($isSold)
+                    <span
+                        style="background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
+                        SOLD
+                    </span>
+                @endif
                 <p class="text-muted">{{ $item->brand }}</p>
 
                 <div class="d-flex align-items-center mb-3">
@@ -131,12 +140,14 @@
                             style="font-weight:600; background-color:#ff5555; border:none;">購入手続きへ</button>
                     </form>
                 @else
-                    @if (Auth::user()->id !== $item->user_id)
+                    @if (Auth::user()->id !== $item->user_id && !$isSold)
                         <form action="{{ route('item.purchase', $item->id) }}" method="get">
                             @csrf
                             <button type="submit" class="btn btn-danger w-100 mb-4"
                                 style="font-weight:600; background-color:#ff5555; border:none;">購入手続きへ</button>
                         </form>
+                    @elseif($isSold)
+                        <button class="btn btn-secondary w-100 mb-4" disabled>売り切れ</button>
                     @endif
                 @endguest
 
@@ -214,7 +225,7 @@
                     @endforelse
                 </div>
                 @guest
-                    <form action="{{ route('login') }}" method="get">
+                    <form action="{{ route('login') }}" method="get" novalidate>
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                         <div class="mb-3">
@@ -226,12 +237,17 @@
                         </div>
                     </form>
                 @else
-                        <form action="{{ route('comment.store') }}" method="POST">
+                    <form action="{{ route('comment.store') }}" method="POST" novalidate>
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                         <div class="mb-3">
                             <textarea name="body" class="form-control mt-5" rows="7" placeholder="商品へのコメント" required></textarea>
                         </div>
+                        @error('body')
+                            <div class="error-message" style="color: red; font-weight:bold;">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         <div>
                             <button type="submit" class="btn btn-danger w-100 mt-4"
                                 style="font-weight:600; background-color:#ff5555; border:none;">コメントを送信する</button>
