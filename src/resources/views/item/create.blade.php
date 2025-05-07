@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', '商品出品')
 @php
     use Illuminate\Support\Str;
 
@@ -106,7 +106,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data" novalidate>
         <div class="container" style="width:50vw;">
             <h1 style="text-align:center; font-size:36px; font-weight:700; padding-top:50px; padding-bottom:20px;">商品を出品
             </h1>
@@ -128,8 +128,8 @@
 
 
             <div class="mt-3">
-                <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail" style="max-width: 150px;"
-                    id="img">
+                <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail"
+                    style="max-width: 150px;" id="img">
             </div>
 
 
@@ -170,14 +170,15 @@
 
             <div class="mb-3">
                 <label for="name" class="form-label">商品名</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"
+                    required>
             </div>
             @error('name')
                 <div class="error-message">{{ $message }}</div>
             @enderror
             <div class="mb-3">
                 <label for="brand" class="form-label">ブランド名</label>
-                <input type="text" class="form-control" id="brand" name="brand" value="{{ old('brand') }}" >
+                <input type="text" class="form-control" id="brand" name="brand" value="{{ old('brand') }}">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">商品の説明</label>
@@ -190,7 +191,8 @@
                 <label for="price" class="form-label">販売価格</label>
                 <div class="input-group">
                     <span class="input-group-text">￥</span>
-                    <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}"  required>
+                    <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}"
+                        required>
                 </div>
             </div>
             @error('price')

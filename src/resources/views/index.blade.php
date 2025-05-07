@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
+@section('title', '商品一覧')
 @section('css')
-
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
@@ -63,33 +64,52 @@
             color: #777;
             cursor: not-allowed;
         }
-        .text-muted{
+
+        .text-muted {
             display: none;
         }
     </style>
-
 @endsection
 
 @section('content')
-    <div class="index__title">
-        <a class="caption recommend">おすすめ</a>
-        @if(Auth::check())
-            <a class="caption" href="{{ route('mylist') }}">マイリスト</a>
+    <div class="index__title" style="margin-bottom: 5vh;">
+        <a class="caption {{ ($pageType ?? 'all') === 'all' ? 'recommend' : '' }}" href="{{ route('index') }}">おすすめ</a>
+        @if (Auth::check())
+            <a class="caption {{ ($pageType ?? 'all') === 'mylist' ? 'recommend' : '' }}" href="{{ route('index', ['page' => 'mylist']) }}" href="{{ route('mylist') }}">マイリスト</a>
         @else
             <a class="caption" href="{{ route('login') }}">マイリスト</a>
         @endif
     </div>
-
+    <div class="mb-4 d-flex justify-content-end" style="padding-right: 5vw;">
+        <form method="GET" action="{{ route('index') }}" class="d-flex align-items-center">
+            <input type="hidden" name="search" value="{{ request('search') }}">
+            <label for="sort" class="me-2 fw-bold mb-0">並び順:</label>
+            <select name="sort" onchange="this.form.submit()" class="form-select form-select-sm" style="width: auto;">
+                <option value="desc" {{ $sort === 'desc' ? 'selected' : '' }}>新しい順</option>
+                <option value="asc" {{ $sort === 'asc' ? 'selected' : '' }}>古い順</option>
+            </select>
+        </form>
+    </div>
     <div class="row unity">
         @foreach ($items as $item)
+            @php
+                $isSold = in_array($item->id, $itemIds);
+            @endphp
             <div class="col-md-3 mb-4" style="cursor: pointer;">
+
                 <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
-                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}" class="card-img-top"
-                    style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
+                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
+                        class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
+
+                    @if ($isSold)
+                        <div
+                            style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
+                            SOLD
+                        </div>
+                    @endif
                     <div class="card-body">
                         <h5 class="card-title">{{ $item->name }}</h5>
                         <p class="card-text">¥{{ number_format($item->price) }}</p>
-
                     </div>
                 </a>
             </div>
@@ -97,6 +117,6 @@
     </div>
 
     <div class="d-flex justify-content-center">
-        {{ $items->appends(['search' => request('search')])->links('pagination::bootstrap-5') }}
+        {{ $items->appends(['search' => request('search'), 'sort' => request('sort')])->links('pagination::bootstrap-5') }}
     </div>
 @endsection

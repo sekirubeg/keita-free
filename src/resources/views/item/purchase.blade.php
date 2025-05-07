@@ -1,11 +1,35 @@
 @extends('layouts.app')
+@php
+    $selectedPayment = session('purchase_payment_id');
+@endphp
 
+@section('title', '購入確認')
 @section('css')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePaymentMethod();
+        });
+
         function updatePaymentMethod() {
             const paymentSelect = document.getElementById("payment_method");
             const selectedText = paymentSelect.options[paymentSelect.selectedIndex].text;
             document.getElementById("selected_payment_method").textContent = selectedText;
+        }
+
+        function goToAddressPage() {
+            event.preventDefault();
+            const paymentValue = document.getElementById("payment_method").value;
+            const itemId = {{ $item->id }};
+            const url = `/purchase/address/${itemId}?payment=${paymentValue}`;
+            window.location.href = url;
+        }
+
+        function goToCheckoutPage() {
+            event.preventDefault();
+            const paymentValue = document.getElementById("payment_method").value;
+            const itemId = {{ $item->id }};
+            const url = `/purchase/checkout/${itemId}?payment=${paymentValue}`;
+            window.location.href = url;
         }
     </script>
     <style>
@@ -46,30 +70,42 @@
                         style="font-size: 1rem; font-weight:bold; padding:0 0 2vh 2vw;">支払い方法</label>
                     <select name="payment" id="payment_method" onchange="updatePaymentMethod()"
                         style="width:15vw; margin-left:5vw;" required>
-                        <option value="" disabled selected>選択してください</option>
-                        <option value="1">クレジットカード</option>
-                        <option value="2">コンビニ払い</option>
-                        <option value="3">PayPay</option>
+
+                        <option value="" disabled {{ $selectedPayment ? '' : 'selected' }}>選択してください</option>
+                        <option value="1" {{ $selectedPayment == 1 ? 'selected' : '' }}>クレジットカード</option>
+                        <option value="2" {{ $selectedPayment == 2 ? 'selected' : '' }}>コンビニ払い</option>
                     </select>
+                    @error('payment')
+                        <div style="color: red; font-weight: bold; margin-left:5vw; margin-top: 1vh;">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
+
             </div>
+
             <div style="padding: 0 5vw 3vh 5vw;   ">
                 <div style="border-bottom: 1px solid #000; padding-bottom: 5vh;">
                     <div style="display: flex; justify-content:space-between;">
                         <p style="font-weight:bold; padding:0 0 2vh 2vw;">配送先</p>
-                        <a href="{{ route('item.address', $item->id) }}"
+                        <a href="#" onclick="goToAddressPage()"
                             style="text-decoration: none; margin-right:2vw;">変更する</a>
                     </div>
                     <div style="margin-left:5vw;">
-                        @if (isset($order) && $order->post_code)
-                            <p>〒 {{ $order->post_code }}</p>
-                            <p>{{ $order->address }}{{ $order->building }}</p>
+                        @if (session('purchase_post_code'))
+                            <p>〒 {{ session('purchase_post_code') }}</p>
+                            <p>{{ session('purchase_address') }}{{ session('purchase_building') }}</p>
                         @else
                             <p>〒 {{ $user->post_code }}</p>
                             <p>{{ $user->address }}{{ $user->building }}</p>
                         @endif
                     </div>
                 </div>
+                @error('address')
+                    <div style="color: red; font-weight: bold; margin-left:5vw; margin-top: 1vh;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
         <div class="row" style="height:60vh; width:40vw;">
@@ -86,7 +122,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="address__button"
+            <button onclick="goToCheckoutPage()" type="submit" class="address__button"
                 style=" padding:3vh 0; font-weight: bold; display: flex; justify-content: center; align-items: center;">購入する</button>
         </div>
     </div>

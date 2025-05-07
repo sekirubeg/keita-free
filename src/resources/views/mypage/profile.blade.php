@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'プロフィール')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -100,6 +100,20 @@
         .text-muted {
             display: none;
         }
+
+        .profile-buttons .profile {
+            color: #ff5555;
+            background-color: transparent;
+            border: 1px solid #ff5555;
+            font-weight: bold;
+            padding: 7px 25px;
+            transition: 0.3s;
+        }
+
+        .profile-buttons .profile:hover {
+            background-color: #ff5555;
+            color: white;
+        }
     </style>
 @endsection
 
@@ -119,8 +133,7 @@
 
 
                     <div class="profile-buttons">
-                        <a href="{{ route('mypage.edit') }}" class="btn btn-primary profile"
-                            style="color: #ff5555 ; background-color:transparent; border:1px solid #ff5555; font-weight:bold; padding:7px 25px">プロフィールを編集</a>
+                        <a href="{{ route('mypage.edit') }}" class="btn btn-primary profile">プロフィールを編集</a>
 
                     </div>
                 </div>
@@ -128,8 +141,8 @@
         </div>
     </div>
     <div class="index__title">
-        <a class="caption recommend">出品した商品</a>
-        <a class="caption" href="{{ route('mylist') }}">購入した商品</a>
+        <a class="caption {{ request()->get('page') === 'sell' || request()->get('page') === null ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'sell']) }}">出品した商品</a>
+        <a class="caption {{ request()->get('page') === 'buy' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
     </div>
     <div class="row unity">
         @foreach ($items as $item)
@@ -139,8 +152,8 @@
                         class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body" style="display: flex; justify-content: space-between; ">
                         <div>
-                        <h5 class="card-title">{{ $item->name }}</h5>
-                        <p class="card-text">{{ $item->price }}</p>
+                            <h5 class="card-title">{{ $item->name }}</h5>
+                            <p class="card-text">{{ $item->price }}</p>
                         </div>
                         <p>いいね数：{{ $item->likes_count }}</p>
                     </div>

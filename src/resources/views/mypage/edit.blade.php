@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'プロフィール設定')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
     <style>
@@ -56,6 +56,7 @@
             height: auto;
             margin-top: 10px;
         }
+
         .error-message {
             color: red;
             font-size: 14px;
@@ -70,14 +71,15 @@
             <h2 class="mb-4 text-center">プロフィール設定</h2>
 
 
-            <form method="POST" action="{{ route('mypage.update') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('mypage.update') }}" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="mb-5" style="display: flex; align-items: center;">
                     {{-- プロフィール画像 --}}
                     @if ($user->image_at)
                         <div class="mt-3" style=" height:150px ; width: 150px; overflow: hidden;">
                             <img src="{{ asset('storage/' . $user->image_at) }}" alt="プロフィール画像" class="img-thumbnail"
-                                style="max-width: 150px; border-radius:50%; width:100%; height:100%; object-fit:cover;" id="img">
+                                style="max-width: 150px; border-radius:50%; width:100%; height:100%; object-fit:cover;"
+                                id="img">
                         </div>
                     @endif
                     {{-- このonchangeがプレビューを表示させる。 --}}
@@ -117,7 +119,8 @@
                 @enderror
                 <div class="mb-1">
                     <label for="address" class="form-label">住所</label>
-                    <input id="address" type="text" class="form-control" name="address" value="{{ old('address', $user->address) }}">
+                    <input id="address" type="text" class="form-control" name="address"
+                        value="{{ old('address', $user->address) }}">
                 </div>
                 @error('address')
                     <div class="error-message">
@@ -126,7 +129,8 @@
                 @enderror
                 <div class="mb-1">
                     <label for="building" class="form-label">建物名</label>
-                    <input id="building" type="text" class="form-control" name="building" value="{{ old('building', $user->building) }}">
+                    <input id="building" type="text" class="form-control" name="building"
+                        value="{{ old('building', $user->building) }}">
                 </div>
 
                 @error('building')

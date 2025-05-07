@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     //
+    public function index()
+    {
+        return view('auth.login');
+    }
+
      public function store(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -20,7 +25,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'メールアドレスまたはパスワードが正しくありません',
+            'email' => 'ログイン情報が登録されていません。',
         ])->withInput();
 
         }
