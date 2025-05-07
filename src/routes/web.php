@@ -18,14 +18,10 @@ use App\Models\Item;
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/mylist', [ItemController::class, 'mylist'])->name('mylist');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 
 Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
@@ -34,7 +30,7 @@ Route::post('mypage/profile', [MypageController::class, 'update'])->name('mypage
 
 
 Route::get('/sell', [ItemController::class, 'create'])->name('item.create');
-Route::post('/item', [ItemController::class, 'store'])->name('item.store');
+Route::post('/sell', [ItemController::class, 'store'])->name('item.store');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
 
 Route::post('/likes/{id}', [LikeController::class, 'store'])->name('like');

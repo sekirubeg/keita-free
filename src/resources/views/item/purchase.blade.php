@@ -75,11 +75,11 @@
                         <option value="1" {{ $selectedPayment == 1 ? 'selected' : '' }}>クレジットカード</option>
                         <option value="2" {{ $selectedPayment == 2 ? 'selected' : '' }}>コンビニ払い</option>
                     </select>
-                    @if (session('error'))
+                    @error('payment')
                         <div style="color: red; font-weight: bold; margin-left:5vw; margin-top: 1vh;">
-                            {{ session('error') }}
+                            {{ $message }}
                         </div>
-                    @endif
+                    @enderror
                 </div>
 
             </div>
@@ -101,6 +101,11 @@
                         @endif
                     </div>
                 </div>
+                @error('address')
+                    <div style="color: red; font-weight: bold; margin-left:5vw; margin-top: 1vh;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
         <div class="row" style="height:60vh; width:40vw;">

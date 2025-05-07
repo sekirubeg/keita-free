@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('payment_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('post_code');
             $table->string('address');
             $table->string('building');
             $table->integer('price');
-            $table->foreignId('payment_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', '決済ページ')
 @section('css')
     <script src="https://js.stripe.com/v3/"></script>
     <script>

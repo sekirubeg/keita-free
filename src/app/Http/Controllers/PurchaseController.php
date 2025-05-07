@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AddressRequest;
+use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
 use App\Models\Order;
 use Illuminate\Auth\Events\Validated;
@@ -51,21 +52,16 @@ class PurchaseController extends Controller
 
         return redirect()->route('item.purchase', $item->id);
     }
-    public function checkout(Request $request, $id)
+    public function checkout(PurchaseRequest $request, $id)
     {
         $item = Item::find($id);
         $user = auth()->user();
-        session([
 
-            'purchase_payment_id' => $request->input('payment'),
-        ]);
-        $paymentId = session('purchase_payment_id');
+        // バリデーション済み
+        $paymentId = $request->validated()['payment'];
+        session(['purchase_payment_id' => $paymentId]);
 
-        if (!in_array($paymentId, [1, 2])) {
-            return redirect()->back()->with('error', '支払い方法を選択してください。');
-        }
-
-
+        
         if ($paymentId == 1) {
             $paymentMethod = 'card';
         } elseif ($paymentId == 2) {
