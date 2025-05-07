@@ -15,9 +15,7 @@ class MypageController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $items = $user->items()->withCount('likes')->paginate(8);
-
         return view('mypage.profile', compact('user', 'items'));
     }
     public function edit(Item $item)
@@ -42,13 +40,11 @@ class MypageController extends Controller
             $user->image_at = $path;
         };
         $user->save();
-
         return redirect()->route('index');
     }
     public function purchased()
     {
         $user = Auth::user();
-
         // ログインユーザーが購入した item を取得
         $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
             ->withCount('likes')

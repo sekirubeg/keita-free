@@ -106,7 +106,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data" novalidate>
         <div class="container" style="width:50vw;">
             <h1 style="text-align:center; font-size:36px; font-weight:700; padding-top:50px; padding-bottom:20px;">商品を出品
             </h1>

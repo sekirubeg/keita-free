@@ -90,33 +90,31 @@
     </div>
     <div class="row unity">
         @foreach ($items as $item)
-            @if (Auth::id() !== $item->user_id)
-                @php
-                    $isSold = in_array($item->id, $itemIds);
-                @endphp
-                <div class="col-md-3 mb-4" style="cursor: pointer;">
+            @php
+                $isSold = in_array($item->id, $itemIds);
+            @endphp
+            <div class="col-md-3 mb-4" style="cursor: pointer;">
 
-                    <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
-                        <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
-                            class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
+                <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
+                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
+                        class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
 
-                        @if ($isSold)
-                            <div
-                                style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
-                                SOLD
-                            </div>
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->name }}</h5>
-                            <p class="card-text">¥{{ number_format($item->price) }}</p>
+                    @if ($isSold)
+                        <div
+                            style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
+                            SOLD
                         </div>
-                    </a>
-                </div>
-            @endif
+                    @endif
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $item->name }}</h5>
+                        <p class="card-text">¥{{ number_format($item->price) }}</p>
+                    </div>
+                </a>
+            </div>
         @endforeach
     </div>
 
     <div class="d-flex justify-content-center">
-        {{ $items->appends(['search' => request('search')])->links('pagination::bootstrap-5') }}
+        {{ $items->appends(['search' => request('search'), 'sort' => request('sort')])->links('pagination::bootstrap-5') }}
     </div>
 @endsection

@@ -71,7 +71,7 @@
             <h2 class="mb-4 text-center">プロフィール設定</h2>
 
 
-            <form method="POST" action="{{ route('mypage.update') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('mypage.update') }}" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="mb-5" style="display: flex; align-items: center;">
                     {{-- プロフィール画像 --}}
