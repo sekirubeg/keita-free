@@ -79,7 +79,7 @@
                 @if ($isSold)
                     <span
                         style="background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
-                        SOLD
+                        Sold
                     </span>
                 @endif
                 <p class="text-muted">{{ $item->brand }}</p>

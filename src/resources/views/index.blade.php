@@ -104,7 +104,7 @@
                     @if ($isSold)
                         <div
                             style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 10px; font-weight: bold; border-radius: 5px;">
-                            SOLD
+                            Sold
                         </div>
                     @endif
                     <div class="card-body">

@@ -18,6 +18,7 @@ class PaymentFactory extends Factory
     {
         return [
             //
+            'payment_method' => '1',
         ];
     }
 }
