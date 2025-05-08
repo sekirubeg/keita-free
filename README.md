@@ -6,7 +6,7 @@
 ## Dockerビルド
 
 ```
-git clone https://github.com/sekirubeg/keita_kadai.git
+git clone https://github.com/sekirubeg/keita-free.git
 docker-compose up -d --build
 ```
 
@@ -30,5 +30,9 @@ Laravel 11.44.2
 MySQL 8.0.40
 ```
 ## URL
+```
 開発環境: http://localhost/
 phpMyAdmin: http://localhost:8080/
+```
+## ER図
+![ER図](src/er.png)
