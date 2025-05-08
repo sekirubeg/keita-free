@@ -42,7 +42,7 @@ mysql -u root -p
 > CREATE DATABASE demo_test;
 > SHOW DATABASES;
 ```
-# configファイルの変更　
+## configファイルの変更　
 configディレクトリの中のdatabase.phpを開き、mysqlの配列部分をコピーして以下に新たにmysql_testを作成します。<br>
 下記のようにしてください。
 ```
@@ -70,7 +70,7 @@ configディレクトリの中のdatabase.phpを開き、mysqlの配列部分を
 +             ]) : [],
 + ],
 ```
-# テスト用の.envファイル作成
+## テスト用の.envファイル作成
 ```
 cp .env .env.testing
 php artisan key:generate --env=testing
