@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class LoginValidationTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_login_requires_email()
     {
         $response = $this->post('/login', [
@@ -48,6 +49,22 @@ class LoginValidationTest extends TestCase
 
         // ログイン後のリダイレクト先を確認（例：/dashboard）
         $response->assertRedirect('/'); // ルートは環境に応じて変更
+    }
+    public function test_login_shows_validation_message_when_credentials_are_missing()
+    {
+        \App\Models\User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'wrong@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'email' => 'ログイン情報が登録されていません。',
+        ]);
     }
 
 }

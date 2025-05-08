@@ -23,6 +23,14 @@ php artisan migrate
 php artisan db:seed
 php artisan storage:link
 ```
+## stripeによる決済
+Stripeテストモードでの決済が可能です。必要に応じて .env に以下のように設定してください：
+
+```
+STRIPE_KEY=your_test_key
+STRIPE_SECRET=your_test_secret
+```
+
 ## 使用技術
 ```
 PHP 8.2.28

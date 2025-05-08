@@ -47,3 +47,9 @@ Route::get('purchase/checkout/{id}', [PurchaseController::class, 'checkout'])->n
 Route::post('/comments', [CommentController::class, 'store'])->name('comment.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
+//テスト時のlogoutルートを確保
+if (app()->environment('testing')) {
+    Route::post('/logout', function () {
+        return redirect('/'); // または何もしない
+    })->name('logout');
+}

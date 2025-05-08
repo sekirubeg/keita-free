@@ -89,5 +89,8 @@ class ItemListTest extends TestCase
         $response->assertSee('これはコメントです。');
         $response->assertSee($user->name);
     }
+
+
+    
 }
 
