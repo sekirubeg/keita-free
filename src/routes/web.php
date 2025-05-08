@@ -44,12 +44,12 @@ Route::get('purchase/address/{id}', [PurchaseController::class, 'address'])->nam
 Route::post('purchase/address/{id}', [PurchaseController::class, 'change'])->name('address.store');
 Route::get('purchase/checkout/{id}', [PurchaseController::class, 'checkout'])->name('item.checkout');
 
-Route::post('/comments', [CommentController::class, 'store'])->name('comment.store');
+Route::post('/comments', [CommentController::class, 'store'])->name('comment.store')->middleware('auth');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
-//テスト時のlogoutルートを確保
+//テスト時のlogoutルート
 if (app()->environment('testing')) {
     Route::post('/logout', function () {
-        return redirect('/'); // または何もしない
+        return redirect('/'); 
     })->name('logout');
 }

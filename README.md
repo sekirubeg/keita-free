@@ -27,9 +27,11 @@ php artisan storage:link
 Stripeテストモードでの決済が可能です。必要に応じて .env に以下のように設定してください：
 
 ```
-STRIPE_KEY=your_test_key
-STRIPE_SECRET=your_test_secret
+STRIPE_PUBLIC_KEY=your_test_key
+STRIPE_SECRET_KEY=your_test_secret
 ```
+## テスト
+ログアウトのテストをするときはweb.phpにある”テスト時のlogoutルートをコメントアウトして行ってください。
 
 ## 使用技術
 ```

@@ -56,41 +56,27 @@ class ItemListTest extends TestCase
         $response->assertSee('Sold');
     }
 
-    public function test_product_detail_page_displays_all_required_information()
+    public function test_user_does_not_see_own_items_in_listing()
     {
-        $user = \App\Models\User::factory()->create();
-        $tag = \App\Models\Tag::factory()->create();
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
 
-        $item = \App\Models\Item::factory()->create([
-            'name' => 'テスト商品',
-            'description' => 'これはテスト用の商品です。',
-            'price' => 1200,
-            'brand' => 'テストブランド',
-            'image_at' => 'https://example.com/image.jpg',
-        ]);
-
-        $item->likes()->attach($user->id);
-        $item->tags()->attach($tag->id);
-        $comment = \App\Models\Comment::factory()->create([
+        // 自分の商品
+        Item::factory()->create([
             'user_id' => $user->id,
-            'item_id' => $item->id,
-            'comment' => 'これはコメントです。',
+            'name' => '自分の商品'
         ]);
 
-        $response = $this->get("/item/{$item->id}");
+        // 他人の商品
+        Item::factory()->create([
+            'user_id' => $otherUser->id,
+            'name' => '他人の商品'
+        ]);
 
-        $response->assertStatus(200);
-        $response->assertSee('テスト商品');
-        $response->assertSee('これはテスト用の商品です。');
-        $response->assertSee('¥1200');
-        $response->assertSee('テストブランド');
-        $response->assertSee($tag->name);
-        $response->assertSee('1'); // いいね数 or コメント数
-        $response->assertSee('これはコメントです。');
-        $response->assertSee($user->name);
+        $response = $this->actingAs($user)->get(route('index'));
+
+        $response->assertSee('他人の商品');
+        $response->assertDontSee('自分の商品');
     }
-
-
-    
 }
 

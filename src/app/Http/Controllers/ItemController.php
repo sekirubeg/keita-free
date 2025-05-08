@@ -29,20 +29,23 @@ class ItemController extends Controller
 
         $search = $searchInput ?? session('search');
         $itemIds = Order::pluck('item_id')->toArray();
+        if ($pageType === 'mylist') {
+            if (!Auth::check()) {
+                return redirect()->route('login');
+            }
 
-        if ($pageType === 'mylist' && Auth::check()) {
-        // マイリスト表示（いいねした商品）
-        $user = Auth::user();
-        $items = $user->likes()
-            ->where('name', 'LIKE', "%{$search}%")
-            ->with('tags', 'user')
-            ->withCount(['likes', 'comments'])
-            ->orderBy('created_at', $sort)
-            ->paginate(8);
+            // マイリスト表示（いいねした商品）
+            $user = Auth::user();
+            $items = $user->likes()
+                ->where('name', 'LIKE', "%{$search}%")
+                ->with('tags', 'user')
+                ->where('items.user_id', '!=', $user->id)
+                ->withCount(['likes', 'comments'])
+                ->orderBy('created_at', $sort)
+                ->paginate(8);
 
-        return view('index', compact('items', 'search', 'itemIds', 'sort', 'pageType'));
-    }
-
+            return view('index', compact('items', 'search', 'itemIds', 'sort', 'pageType'));
+        }
         $itemsQuery = Item::with(['tags', 'user'])
             ->withCount(['likes', 'comments'])
             ->when($search, function ($query) use ($search) {

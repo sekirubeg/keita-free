@@ -38,23 +38,20 @@ class CommentTest extends TestCase
         ]);
         
     }
-    // public function test_guest_user_cannot_post_comment()
-    // {
-    //     $item = Item::factory()->create();
+    public function test_guest_cannot_post_comment()
+    {
+        $item = \App\Models\Item::factory()->create();
 
-    //     $response = $this->post('/comments', [
-    //         'item_id' => $item->id,
-    //         'body' => '未ログインでのコメント',
-    //     ]);
+        $response = $this->post(route('comment.store'), [
+            'item_id' => $item->id,
+            'body' => 'ゲストのコメント',
+        ]);
 
-    //     // 未ログインなのでリダイレクトされる（通常は /login）
-    //     $response->assertRedirect('/login');
-
-    //     // DBにコメントが保存されていないことを確認
-    //     $this->assertDatabaseMissing('comments', [
-    //         'body' => '未ログインでのコメント',
-    //     ]);
-    // }
+        $response->assertRedirect(route('login')); // 未認証なのでログインにリダイレクト
+        $this->assertDatabaseMissing('comments', [
+            'body' => 'ゲストのコメント',
+        ]);
+    }
     public function test_comment_validation_error_when_body_is_empty()
     {
         $user = \App\Models\User::factory()->create();

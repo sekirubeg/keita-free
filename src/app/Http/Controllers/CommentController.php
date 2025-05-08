@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     //
+   
     public function store(CommentRequest $request)
     {
         $item = Item::with('user')->findOrFail($request->item_id);
