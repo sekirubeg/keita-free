@@ -35,4 +35,4 @@ MySQL 8.0.40
 phpMyAdmin: http://localhost:8080/
 ```
 ## ER図
-![ER図](src/er.png)
+![ER図](src/ER.png)
