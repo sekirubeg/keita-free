@@ -30,9 +30,52 @@ Stripeテストモードでの決済が可能です。必要に応じて .env �
 STRIPE_PUBLIC_KEY=your_test_key
 STRIPE_SECRET_KEY=your_test_secret
 ```
-## テスト
+### PHP.Unitによるテスト
 ログアウトのテストをするときはweb.phpにある”テスト時のlogoutルートをコメントアウトして行ってください。
-いいね機能のテストおよび、支払い方法選択のテストは、javaScriptの変化を捉えなければならず、php.unitだけではテストすることが不可能だったため、テストから除外しています。
+いいね機能のテストおよび、支払い方法選択のテストは、javaScriptの変化を捉えなければならず、<br>
+php.unitだけではテストすることが不可能だったため、テストから除外しています。
+
+## test 環境構築
+```
+docker-compose exec mysql bash
+mysql -u root -p
+> CREATE DATABASE demo_test;
+> SHOW DATABASES;
+```
+# configファイルの変更　
+configディレクトリの中のdatabase.phpを開き、mysqlの配列部分をコピーして以下に新たにmysql_testを作成します。<br>
+下記のようにしてください。
+```
+'mysql' => [
+// 中略
+],
+
++ 'mysql_test' => [
++             'driver' => 'mysql',
++             'url' => env('DATABASE_URL'),
++             'host' => env('DB_HOST', '127.0.0.1'),
++             'port' => env('DB_PORT', '3306'),
++             'database' => 'demo_test',
++             'username' => 'root',
++             'password' => 'root',
++             'unix_socket' => env('DB_SOCKET', ''),
++             'charset' => 'utf8mb4',
++             'collation' => 'utf8mb4_unicode_ci',
++             'prefix' => '',
++             'prefix_indexes' => true,
++             'strict' => true,
++             'engine' => null,
++             'options' => extension_loaded('pdo_mysql') ? array_filter([
++                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
++             ]) : [],
++ ],
+```
+# テスト用の.envファイル作成
+```
+cp .env .env.testing
+php artisan key:generate --env=testing
+php artisan migrate --env=testing
+```
 
 ## 使用技術
 ```
