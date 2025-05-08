@@ -18,10 +18,12 @@ class ItemFactory extends Factory
      */
     public function definition(): array
     {
-        $faker = FakerFactory::create('ja_JP');
         return [
-            //
-            "user_id" => User::factory(),
+            'name' => $this->faker->word(), // ✅ これが必要
+            'description' => $this->faker->sentence(), // ← これを追加
+            'price' => $this->faker->numberBetween(100, 1000), // もし必須なら
+            'image_at' => $this->faker->imageUrl(),
+            'user_id' => User::factory(),  // テスト用なので仮でもOK（または User::factory()）
         ];
     }
 }
