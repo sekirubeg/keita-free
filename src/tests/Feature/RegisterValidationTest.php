@@ -77,6 +77,22 @@ class RegisterValidationTest extends TestCase
             'password_confirmation' => 'パスワードと一致しません',
         ]);
     }
+    //全ての項目が入力されている場合、会員情報が登録され、ユーザ登録画面に遷移される（テストではログイン画面に遷移と記載してあったが、画面設計ではマイページ編集画面に遷移することになっているので、マイページ編集画面に遷移するように修正）
+    public function test_user_can_register_with_valid_data()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テストユーザー',
+            'email' => 'testuser@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
 
+        // データベースにユーザーが登録されていることを確認
+        $this->assertDatabaseHas('users', [
+            'email' => 'testuser@example.com',
+        ]);
 
+        // 登録後にログイン画面にリダイレクトされることを確認
+        $response->assertRedirect('/mypage/profile');
+    }
 }
