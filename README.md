@@ -23,8 +23,13 @@ php artisan migrate
 php artisan db:seed
 php artisan storage:link
 ```
+※Failed to open stream: Permission denied"エラーが発生した場合
+「storage」ディレクトリ以下の権限を変更してください
+```
+chmod -R 777 storage
+```
 ## stripeによる決済
-Stripeテストモードでの決済が可能です。必要に応じて .env に以下のように設定してください：
+Stripeテストモードでの決済が可能です。必要に応じて .env に以下のように設定してください
 
 ```
 STRIPE_PUBLIC_KEY=your_test_key
