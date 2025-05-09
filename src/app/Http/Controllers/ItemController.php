@@ -8,7 +8,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Tag;
 use App\Models\Order;
-use Illuminate\support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
