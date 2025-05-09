@@ -23,7 +23,7 @@ php artisan migrate
 php artisan db:seed
 php artisan storage:link
 ```
-※Failed to open stream: Permission denied"エラーが発生した場合
+※"Failed to open stream: Permission denied"エラーが発生した場合
 「storage」ディレクトリ以下の権限を変更してください
 ```
 chmod -R 777 storage
