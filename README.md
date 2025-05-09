@@ -107,6 +107,7 @@ APP_URL=http://localhost
 php artisan key:generate --env=testing
 php artisan config:clear
 php artisan migrate --env=testing
+php artisan test
 ```
 
 ## 使用技術
