@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Faker\Factory as FakerFactory;;
+use Faker\Factory as FakerFactory;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Payment;
@@ -19,8 +19,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        $faker = FakerFactory::create('ja_JP');
 
         $items = [
             [
