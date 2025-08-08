@@ -52,7 +52,7 @@
         {{ $message }}
       </div>
     @enderror
-    <input type="hidden" name="image_at" value="/src/storage/app/public/images/default.jpeg">
+    <input type="hidden" name="image_at" value="/src/default.png">
     <button type="submit" class="register__button">登録する</button>
   </form>
     <div class="register__form__link">
