@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ExhibitionRequest;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Deal;
 use App\Models\Tag;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         $sort = $request->input('sort', 'desc');
         $searchInput = $request->input('search');
         $pageType = $request->query('page', 'all'); // デフォルトは 'all'
@@ -89,5 +90,16 @@ class ItemController extends Controller
         $item = Item::with(['tags', 'comments', 'user'])->withCount('likes')->withCount('comments')->find($id);
         $itemIds = Order::pluck('item_id')->toArray();
         return view('item.show', compact("item", "user", "itemIds"));
+    }
+    public function transaction($id)
+    {
+        $user = Auth::user();
+        $item = Item::with(['tags', 'comments', 'user'])->withCount('likes')->withCount('comments')->find($id);
+        $itemIds = Order::pluck('item_id')->toArray();
+
+        // item_idが一致する全ての取引を取得する
+        $deal = Deal::where('item_id', $id)->first();
+
+        return view('item.transaction', compact("item", "user", "itemIds", "deal"));
     }
 }

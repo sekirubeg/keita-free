@@ -7,6 +7,7 @@ use App\Http\Requests\AddressRequest;
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\Deal;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,7 +62,7 @@ class PurchaseController extends Controller
         $paymentId = $request->validated()['payment'];
         session(['purchase_payment_id' => $paymentId]);
 
-        
+
         if ($paymentId == 1) {
             $paymentMethod = 'card';
         } elseif ($paymentId == 2) {
@@ -105,6 +106,13 @@ class PurchaseController extends Controller
         $order->building  = session('purchase_building') ?? $user->building;
         $order->save();
 
-        return redirect()->route('index')->with('success', '購入が完了しました。');
+        $deal = new Deal();
+        $deal->item_id = $item->id;
+        $deal->buyer_id = $user->id;
+        $deal->seller_id = $item->user_id;
+        $deal->status = "dealing";
+        $deal->save();
+
+        return redirect()->route('index');
     }
 }

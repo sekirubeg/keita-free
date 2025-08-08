@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Deal;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
 
@@ -15,16 +16,34 @@ class MypageController extends Controller
     public function index(Request $request)
 {
     $user = Auth::user();
-    $page = $request->query('page', 'sell'); // デフォルトは "sell"
+    $page = $request->query('page', 'sell',); // デフォルトは "sell"
 
     if ($page === 'buy') {
             // 購入した商品（orders 経由で item を取得）
-            $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
-                ->withCount('likes')
+            // $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
+            //     ->withCount('likes')
+            //     ->paginate(8);
+            $deals = Deal::where('buyer_id', $user->id)
+                ->where('status', 'completed') //「完了」ステータスの取引のみを対象
+                ->with(['item' => fn($query) => $query->withCount('likes')])
+                ->latest() // 新しい順に並べる
                 ->paginate(8);
 
-            return view('mypage.purchased', compact('user', 'items'));
-    } else {
+            return view('mypage.purchased', compact('user', 'deals'));
+    }
+    elseif($page === 'transaction') {
+            // 取引中の商品
+            $deals = Deal::where(function ($query) use ($user) {
+                $query->where('buyer_id', $user->id)
+                    ->orWhere('seller_id', $user->id);
+            })
+            ->with(['item' => fn($query) => $query->withCount('likes')])
+                ->latest() // 新しい取引から表示
+                ->paginate(8);
+
+            return view('mypage.transaction', compact('user', 'deals'));
+    }
+    else {
         // 出品した商品
         $items = $user->items()->withCount('likes')->paginate(8);
         return view('mypage.profile', compact('user', 'items'));

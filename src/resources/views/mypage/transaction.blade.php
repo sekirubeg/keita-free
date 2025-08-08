@@ -101,8 +101,7 @@
         .text-muted {
             display: none;
         }
-
-        .profile-buttons .profile {
+         .profile-buttons .profile {
             color: #ff5555;
             background-color: transparent;
             border: 1px solid #ff5555;
@@ -171,30 +170,33 @@
                         </div>
                     </div>
 
+
                     <div class="profile-buttons">
                         <a href="{{ route('mypage.edit') }}" class="btn btn-primary profile">プロフィールを編集</a>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="index__title">
-        <a class="caption {{ request()->get('page') === 'sell' || request()->get('page') === null ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'sell']) }}">出品した商品</a>
-        <a class="caption {{ request()->get('page') === 'buy' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
-        <a class="caption {{ request()->get('page') === 'transaction' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'transaction']) }}">取引中の商品</a>
+        <a class="caption" href="{{ route('mypage') }}">出品した商品</a>
+        <a class="caption" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
+        <a class="caption recommend">取引中の商品</a>
     </div>
+
     <div class="row unity">
-        @foreach ($items as $item)
+        @foreach ($deals as $deal)
             <div class="col-md-3 mb-4" style="cursor: pointer;">
-                <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
-                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
+                <a href="{{ route('item.transaction', $deal->item->id) }}" class="card task-card h-150" style="display:block;">
+                    <img src="{{ Str::startsWith($deal->item->image_at, 'http') ? $deal->item->image_at : asset('storage/' . $deal->item->image_at) }}"
                         class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body" style="display: flex; justify-content: space-between; ">
                         <div>
-                            <h5 class="card-title">{{ $item->name }}</h5>
-                            <p class="card-text">{{ $item->price }}</p>
+                            <h5 class="card-title">{{ $deal->item->name }}</h5>
+                            <p class="card-text">{{ $deal->item->price }}</p>
                         </div>
-                        <p>いいね数：{{ $item->likes_count }}</p>
+                        <p>いいね数：{{ $deal->item->likes_count }}</p>
                     </div>
 
                 </a>

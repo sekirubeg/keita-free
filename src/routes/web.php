@@ -34,6 +34,7 @@ Route::post('mypage/profile', [MypageController::class, 'update'])->name('mypage
 Route::get('/sell', [ItemController::class, 'create'])->name('item.create');
 Route::post('/sell', [ItemController::class, 'store'])->name('item.store');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
+Route::get('/item/transaction/{id}', [ItemController::class, 'transaction'])->name('item.transaction');
 
 Route::post('/likes/{id}', [LikeController::class, 'store'])->name('like');
 Route::delete('/likes/{id}', [LikeController::class, 'destroy'])->name('unlike');
@@ -50,6 +51,6 @@ Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->nam
 //テスト時のlogoutルート
 if (app()->environment('testing')) {
     Route::post('/logout', function () {
-        return redirect('/'); 
+        return redirect('/');
     })->name('logout');
 }
