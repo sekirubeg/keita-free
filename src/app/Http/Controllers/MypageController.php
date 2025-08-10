@@ -20,16 +20,16 @@ class MypageController extends Controller
 
     if ($page === 'buy') {
             // 購入した商品（orders 経由で item を取得）
-            // $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
-            //     ->withCount('likes')
-            //     ->paginate(8);
-            $deals = Deal::where('buyer_id', $user->id)
-                ->where('status', 'completed') //「完了」ステータスの取引のみを対象
-                ->with(['item' => fn($query) => $query->withCount('likes')])
-                ->latest() // 新しい順に並べる
+            $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
+                ->withCount('likes')
                 ->paginate(8);
+            // $deals = Deal::where('buyer_id', $user->id)
+            //     ->where('status', 'completed') //「完了」ステータスの取引のみを対象
+            //     ->with(['item' => fn($query) => $query->withCount('likes')])
+            //     ->latest() // 新しい順に並べる
+            //     ->paginate(8);
 
-            return view('mypage.purchased', compact('user', 'deals'));
+            return view('mypage.purchased', compact('user', 'items'));
     }
     elseif($page === 'transaction') {
             // 取引中の商品

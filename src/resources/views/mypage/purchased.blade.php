@@ -186,17 +186,17 @@
     </div>
 
     <div class="row unity">
-        @foreach ($deals as $deal)
+        @foreach ($items as $item)
             <div class="col-md-3 mb-4" style="cursor: pointer;">
-                <a href="{{ route('item.show', $deal->item->id) }}" class="card task-card h-150" style="display:block;">
-                    <img src="{{ Str::startsWith($deal->item->image_at, 'http') ? $deal->item->image_at : asset('storage/' . $deal->item->image_at) }}"
+                <a href="{{ route('item.show', $item->id) }}" class="card task-card h-150" style="display:block;">
+                    <img src="{{ Str::startsWith($item->image_at, 'http') ? $item->image_at : asset('storage/' . $item->image_at) }}"
                         class="card-img-top" style="height: 35vh; object-fit: cover; border-bottom: 1px solid #dee2e6;">
                     <div class="card-body" style="display: flex; justify-content: space-between; ">
                         <div>
-                            <h5 class="card-title">{{ $deal->item->name }}</h5>
-                            <p class="card-text">{{ $deal->item->price }}</p>
+                            <h5 class="card-title">{{ $item->name }}</h5>
+                            <p class="card-text">{{ $item->price }}</p>
                         </div>
-                        <p>いいね数：{{ $deal->item->likes_count }}</p>
+                        <p>いいね数：{{ $item->likes_count }}</p>
                     </div>
 
                 </a>

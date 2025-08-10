@@ -8,6 +8,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MessageController;
+
 use App\Models\Item;
 
 
@@ -47,6 +49,10 @@ Route::get('purchase/checkout/{id}', [PurchaseController::class, 'checkout'])->n
 
 Route::post('/comments', [CommentController::class, 'store'])->name('comment.store')->middleware('auth');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+
+Route::post('/transaction/{deal_id}/message', [MessageController::class, 'store'])->name('transaction.message')->middleware('auth');
+Route::put('/transaction/message/{message}', [MessageController::class, 'update'])->name('transaction.message.update')->middleware('auth');
+Route::delete('/transaction/message/{message}', [MessageController::class, 'destroy'])->name('transaction.message.destroy')->middleware('auth');
 
 //テスト時のlogoutルート
 if (app()->environment('testing')) {

@@ -93,13 +93,35 @@ class ItemController extends Controller
     }
     public function transaction($id)
     {
+
         $user = Auth::user();
         $item = Item::with(['tags', 'comments', 'user'])->withCount('likes')->withCount('comments')->find($id);
-        $itemIds = Order::pluck('item_id')->toArray();
-
-        // item_idが一致する全ての取引を取得する
+        // $itemIds = Order::pluck('item_id')->toArray();
+        // item_idが一致する取引を取得する
         $deal = Deal::where('item_id', $id)->first();
+        if ($deal && $deal->seller_id === $user->id) {
+            // 自分が売り手の場合、自分が売り手となっている他の取引を取得
+            $ongoingDeals = Deal::where('seller_id', $user->id)
+                ->where('id', '!=', $deal->id) // 今見ている取引は除外
+                ->with('item', 'buyer', 'seller')
+                ->latest()
+                ->limit(10)
+                ->get();
+            $authority = false;
+        } else {
+            // それ以外の場合（自分が買い手、または取引が存在しない場合）は、
+            // 自分が買い手になっている他の取引を取得します
+            $ongoingDeals = Deal::where('buyer_id', $user->id)
+                ->where('id', '!=', $deal->id) // 今見ている取引は除外
+                ->with('item', 'buyer', 'seller')
+                ->latest()
+                ->limit(10)
+                ->get();
+            $authority = true;
+        }
 
-        return view('item.transaction', compact("item", "user", "itemIds", "deal"));
+        return view('item.transaction', compact("item", "user", "deal", "ongoingDeals", "authority"));
     }
 }
+
+
