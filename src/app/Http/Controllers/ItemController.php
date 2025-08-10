@@ -120,6 +120,11 @@ class ItemController extends Controller
             $authority = true;
         }
 
+        $deal->messages()
+            ->where('sender_id', '!=', auth()->id()) // 送信者が自分ではない
+            ->where('read_at', null) // 未読である
+            ->update(['read_at' => now()]); // 現在時刻で更新
+            
         return view('item.transaction', compact("item", "user", "deal", "ongoingDeals", "authority"));
     }
 }

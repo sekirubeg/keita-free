@@ -18,18 +18,22 @@ class MypageController extends Controller
     $user = Auth::user();
     $page = $request->query('page', 'sell',); // デフォルトは "sell"
 
+    $totalUnreadCount = Deal::where(function ($query) use ($user) {
+        $query->where('buyer_id', $user->id)->orWhere('seller_id', $user->id);
+    })
+    ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
+    ->where('messages.sender_id', '!=', $user->id)
+    ->whereNull('messages.read_at')
+    ->count();
+
     if ($page === 'buy') {
             // 購入した商品（orders 経由で item を取得）
             $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
                 ->withCount('likes')
                 ->paginate(8);
-            // $deals = Deal::where('buyer_id', $user->id)
-            //     ->where('status', 'completed') //「完了」ステータスの取引のみを対象
-            //     ->with(['item' => fn($query) => $query->withCount('likes')])
-            //     ->latest() // 新しい順に並べる
-            //     ->paginate(8);
 
-            return view('mypage.purchased', compact('user', 'items'));
+
+            return view('mypage.purchased', compact('user', 'items', 'totalUnreadCount'));
     }
     elseif($page === 'transaction') {
             // 取引中の商品
@@ -38,15 +42,24 @@ class MypageController extends Controller
                     ->orWhere('seller_id', $user->id);
             })
             ->with(['item' => fn($query) => $query->withCount('likes')])
+                ->withCount([
+                    'messages as unread_count' => fn($query) => $query->where('sender_id', '!=', $user->id)->whereNull('read_at')
+                ])
                 ->latest() // 新しい取引から表示
                 ->paginate(8);
 
-            return view('mypage.transaction', compact('user', 'deals'));
+            // 未読メッセージの合計件数を取得
+            // $totalUnreadCount = 0;
+            // foreach ($deals as $deal) {
+            //     $totalUnreadCount += $deal->unread_count;
+            // }
+
+            return view('mypage.transaction', compact('user', 'deals', 'totalUnreadCount'));
     }
     else {
         // 出品した商品
         $items = $user->items()->withCount('likes')->paginate(8);
-        return view('mypage.profile', compact('user', 'items'));
+        return view('mypage.profile', compact('user', 'items', 'totalUnreadCount'));
     }
 }
 

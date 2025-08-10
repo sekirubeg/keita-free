@@ -181,7 +181,10 @@
     <div class="index__title">
         <a class="caption {{ request()->get('page') === 'sell' || request()->get('page') === null ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'sell']) }}">出品した商品</a>
         <a class="caption {{ request()->get('page') === 'buy' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
-        <a class="caption {{ request()->get('page') === 'transaction' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'transaction']) }}">取引中の商品</a>
+        <a class="caption {{ request()->get('page') === 'transaction' ? 'recommend' : '' }}" href="{{ route('mypage', ['page' => 'transaction']) }}" style="display: flex; align-items: center;">取引中の商品@if($totalUnreadCount > 0)<span class="unread-badge"
+            style="color: white; background: #FF0000; margin-left:10px; width:30px; height:28px; border-radius:40%; display: flex; justify-content: center; align-items: center;">
+            {{ $totalUnreadCount }}
+        </span>@endif</a>
     </div>
     <div class="row unity">
         @foreach ($items as $item)
