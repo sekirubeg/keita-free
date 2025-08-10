@@ -1,10 +1,36 @@
 @extends('layouts.app')
 @section('title', '商品詳細')
+@php
+    use Illuminate\Support\Str;
+
+    $imagePath = $item->image_at ?? '';
+    $imageIsExternal = Str::startsWith($imagePath, 'http');
+    $isValidImage =
+        Str::endsWith(Str::lower($imagePath), '.jpg') ||
+        Str::endsWith(Str::lower($imagePath), '.jpeg') ||
+        Str::endsWith(Str::lower($imagePath), '.png');
+
+    $imageSrc = '';
+
+    if (!empty($imagePath) && $isValidImage) {
+        $imageSrc = $imageIsExternal ? $imagePath : asset('storage/' . $imagePath);
+    } else {
+        $imageSrc = asset('images/blank_image.png'); // デフォルト画像
+    }
+@endphp
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v6.7.0/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/transaction.css') }}">
-
+    <script>
+        function previewImage(obj) {
+            var fileReader = new FileReader();
+            fileReader.onload = (function() {
+                document.getElementById('img').src = fileReader.result;
+            });
+            fileReader.readAsDataURL(obj.files[0]);
+        }
+    </script>
 @endsection
 
 @section('content')
@@ -65,16 +91,25 @@
                                         alt="avatar">
                                     <p style="margin: 0;">{{ $message->sender->name }}</p>
                                 </div>
+
+
                                 <div id="message-content-{{ $message->id }}"
                                     style="display:flex; flex-direction:row-reverse; margin-top: 1vh; align-items: flex-end;">
 
-                                    <div class="message-body">
+                                    <div class="message-body" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
+
                                         <p class="message-content">{{ $message->content }}</p>
+                                        @if ($message->image_at)
+                                            <img src="{{ asset('storage/' . $message->image_at) }}" class="message-image"
+                                                alt="メッセージ画像">
+                                        @endif
                                     </div>
-                                    <span class="message-time">{{ $message->created_at->format('H:i') }}</span>
                                 </div>
+
+
                                 {{-- メッセージ編集フォーム（初期状態は非表示） --}}
                                 <div id="edit-form-{{ $message->id }}" style="display: none;">
+                                    {{-- メッセージ編集フォーム --}}
                                     <form action="{{ route('transaction.message.update', $message->id) }}" method="POST">
                                         @csrf
                                         @method('put')
@@ -108,32 +143,47 @@
                                         alt="avatar">
                                     <p style="margin: 0;">{{ $message->sender->name }}</p>
                                 </div>
-                                <div style="display:flex; margin-top: 1vh; align-items: flex-end;">
-                                    {{-- 相手のメッセージ送信時間 --}}
-                                    {{-- メッセージ内容 --}}
-                                    <div class="message-body">
+                                <div style="display:flex; margin-top: 1vh; ">
 
-                                        <p class="message-content">{{ $message->content }}</p>
+                                    <div class="message-body" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;">
+                                        {{-- メッセージ内容と画像 --}}
+
+                                        <p class="message-content" style="display: inline-block;">{{ $message->content }}</p>
+                                        @if ($message->image_at)
+                                            <img src="{{ asset('storage/' . $message->image_at) }}" class="message-image"
+                                                alt="メッセージ画像">
+                                        @endif
                                     </div>
-                                    <span class="message-time">{{ $message->created_at->format('H:i') }}</span>
                                 </div>
                             </div>
                         @endif
                     @endforeach
                 </div>
+                <div class="mt-3" >
+                    {{-- 3. メッセージ入力フォーム --}}
+                    <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail"
+                        style="max-width: 150px;" id="img">
+                </div>
 
                 {{-- 4. メッセージ入力フォーム --}}
                 <div class="message-form-container">
                     <form action="{{ route('transaction.message', ['deal_id' => $deal->id]) }}" method="POST"
-                        class="message-form">
+                        class="message-form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $deal->item_id }}">
                         <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください" required>
+                        <div class="image-upload-wrapper">
+                            <input type="file" id="messageImageInput" name="image_at" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                            <button type="button" onclick="document.getElementById('messageImageInput').click()" class="image-upload-button">
+                                画像を追加
+                            </button>
+                        </div>
                         <button type="submit" class="send-button">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
                 </div>
+
 
             </div>
         </main>

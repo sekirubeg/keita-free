@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('deal_id')->constrained()->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->text('content');
+            $table->string('image_at')->nullable();
             $table->timestamps();
         });
     }

@@ -27,6 +27,10 @@ class MessageController extends Controller
         $message->content = $request->content;
         $message->deal_id = $deal->id;
         $message->sender_id = Auth::id();
+        if ($request->hasFile('image_at')) {
+            $path = $request->file('image_at')->store('images', 'public');
+            $message->image_at = $path;
+        }
         $message->save();
 
         return redirect()->route('item.transaction', ['id' => $item->id]);
