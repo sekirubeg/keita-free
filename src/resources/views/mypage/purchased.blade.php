@@ -167,6 +167,7 @@
                     <div>
                         <p style="font-size:2rem; font-weight:bold; margin-bottom:0; ">{{ $user->name }}</p>
                         {{-- 星評価の表示エリア --}}
+                        @if($formattedAverageRating > 0)
                         <div class="user-rating">
                             <div class="stars-display">
                                 {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
@@ -180,6 +181,7 @@
                                 @endfor
                             </div>
                         </div>
+                        @endif
                     </div>
 
 

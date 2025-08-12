@@ -217,7 +217,7 @@
                         class="message-form" enctype="multipart/form-data" novalidate>
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $deal->item_id }}">
-                        <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください" required>
+                        <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください" value="{{ old('content') }}" required>
                         <div class="image-upload-wrapper">
                             <input type="file" id="messageImageInput" name="image_at" accept="image/*" style="display: none;" onchange="previewImage(this)">
                             <button type="button" onclick="document.getElementById('messageImageInput').click()" class="image-upload-button">
@@ -251,6 +251,30 @@
             document.getElementById('edit-form-' + messageId).style.display = 'none';
         }
 
+        const messageInput = document.querySelector('.message-input');
+        const dealId = "{{ $deal->id }}";
+        const storageKey = `chat_message_${dealId}`;
+
+        // ページ読み込み時にlocalStorageからデータを復元
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedMessage = localStorage.getItem(storageKey);
+            if (savedMessage) {
+                messageInput.value = savedMessage;
+            }
+        });
+
+        // 入力内容が変わるたびにlocalStorageに保存
+        messageInput.addEventListener('input', () => {
+            localStorage.setItem(storageKey, messageInput.value);
+        });
+
+        // フォーム送信後にlocalStorageのデータを削除
+        const messageForm = document.querySelector('.message-form');
+        messageForm.addEventListener('submit', () => {
+            localStorage.removeItem(storageKey);
+        });
+        // ======================================
+
         // 出品者側で、まだ評価を送信していない場合にモーダルを自動表示
         @if (!$authority && $deal->completed_at && !$deal->hasEvaluatedBy(Auth::id()))
             document.addEventListener('DOMContentLoaded', function () {
@@ -260,4 +284,3 @@
         @endif
     </script>
 @endsection
-
