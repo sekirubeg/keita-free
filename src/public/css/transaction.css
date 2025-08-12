@@ -255,3 +255,75 @@
     /* 画像とテキストの間に少しスペースを空ける（任意） */
     margin-top: 10px;
 }
+/* 星評価コンテナのスタイル */
+.form-rating {
+    display: flex;
+    flex-direction: row-reverse; /* 星を右から左へ並べる */
+    justify-content: space-around;
+    padding: 0 15px;
+    margin-bottom: 10px;
+}
+
+/* 星のラベル（非選択時のスタイル） */
+.form-rating__label {
+    color: #ccc; /* 灰色 */
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 4rem;
+}
+
+/* ホバー時のスタイル */
+.form-rating__label:hover,
+.form-rating__label:hover ~ .form-rating__label {
+    color: #FFF048; /* ホバーした星と、それより右（`~`セレクタの適用範囲）の星が黄色に */
+}
+
+/* 選択された星とその前の星のスタイル */
+.form-rating__input:checked ~ .form-rating__label {
+    color: #FFF048; /* 選択された星と、それより右の星が黄色に */
+}
+
+/* input要素は非表示にする */
+.form-rating__input {
+    display: none;
+}
+
+.modal-content {
+    background-color: #FDFCE6;
+    border: 1px solid #000000;
+    border-radius: 8px;
+
+}
+
+.modal-title{
+    font-size: 35px;
+}
+
+.form-title{
+    color: #868686;
+    padding: 10px 20px;
+    margin: 0;
+    font-size: 20px;
+}
+
+.modal-btn{
+    background-color: #ff8282;
+    border: none;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 24px;
+}
+
+.modal-header {
+    padding: 20px ;
+    border-bottom: 1px solid #000000;
+}
+
+.modal-footer{
+    border-top: #000000 solid 1px;
+}
+
+.modal-md{
+    max-width: 600px;
+}

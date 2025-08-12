@@ -54,6 +54,8 @@ Route::post('/transaction/{deal_id}/message', [MessageController::class, 'store'
 Route::put('/transaction/message/{message}', [MessageController::class, 'update'])->name('transaction.message.update')->middleware('auth');
 Route::delete('/transaction/message/{message}', [MessageController::class, 'destroy'])->name('transaction.message.destroy')->middleware('auth');
 
+Route::post('/deal/complete/{deal}', [ItemController::class, 'complete'])->name('deal.complete')->middleware('auth');
+
 //テスト時のlogoutルート
 if (app()->environment('testing')) {
     Route::post('/logout', function () {

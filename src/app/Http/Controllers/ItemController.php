@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Deal;
 use App\Models\Tag;
 use App\Models\Order;
+use App\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -124,8 +125,42 @@ class ItemController extends Controller
             ->where('sender_id', '!=', auth()->id()) // 送信者が自分ではない
             ->where('read_at', null) // 未読である
             ->update(['read_at' => now()]); // 現在時刻で更新
-            
+
         return view('item.transaction', compact("item", "user", "deal", "ongoingDeals", "authority"));
+    }
+
+    public function complete(Request $request, Deal $deal)
+    {
+        // 1. バリデーション
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        // 2. 評価対象のユーザーを特定
+        $evaluatedUserId = (Auth::id() === $deal->buyer_id) ? $deal->seller_id : $deal->buyer_id;
+
+        // 3. 既に評価済みかチェック（二重評価防止）
+        $existingEvaluation = Evaluation::where('deal_id', $deal->id)
+            ->where('evaluator_id', Auth::id())
+            ->first();
+        if ($existingEvaluation) {
+            // 既に評価済みの場合は、エラーメッセージをリダイレクトで返す
+            return redirect()->route('item.index')->with('error', 'この取引は既に評価済みです。');
+        }
+
+        // 4. データベースに評価を保存
+        Evaluation::create([
+            'deal_id' => $deal->id,
+            'evaluator_id' => Auth::id(),
+            'evaluated_id' => $evaluatedUserId,
+            'rating' => $request->rating,
+        ]);
+
+        // 5. 取引完了状態に更新
+        $deal->update(['completed_at' => now()]);
+
+        // 6. 完了後は商品一覧画面に遷移
+        return redirect()->route('index');
     }
 }
 

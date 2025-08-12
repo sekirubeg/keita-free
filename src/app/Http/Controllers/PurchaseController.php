@@ -110,7 +110,6 @@ class PurchaseController extends Controller
         $deal->item_id = $item->id;
         $deal->buyer_id = $user->id;
         $deal->seller_id = $item->user_id;
-        $deal->status = "dealing";
         $deal->save();
 
         return redirect()->route('index');

@@ -41,7 +41,8 @@ class MypageController extends Controller
                 $query->where('buyer_id', $user->id)
                     ->orWhere('seller_id', $user->id);
             })
-            ->with(['item' => fn($query) => $query->withCount('likes')])
+                ->whereNull('completed_at')
+                ->with(['item' => fn($query) => $query->withCount('likes')])
                 ->withCount([
                     'messages as unread_count' => fn($query) => $query->where('sender_id', '!=', $user->id)->whereNull('read_at')
                 ])

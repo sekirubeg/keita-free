@@ -22,6 +22,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v6.7.0/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/transaction.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         function previewImage(obj) {
             var fileReader = new FileReader();
@@ -61,10 +62,7 @@
                         <h2>「{{ $deal->partner()->name }}」さんとの取引画面</h2>
                     </div>
                     @if ($authority)
-                        <form action=method="POST">
-                            @csrf
-                            <button type="submit" class="btn-complete-deal">取引を完了する</button>
-                        </form>
+                        <button type="button" class="btn-complete-deal" data-bs-toggle="modal" data-bs-target="#completeModal">取引を完了する</button>
                     @endif
                 </div>
 
@@ -77,6 +75,10 @@
                         <p>¥{{ number_format($deal->item->price) }}</p>
                     </div>
                 </div>
+
+
+
+
                 {{-- 3. チャット履歴エリア --}}
                 <div class="chat-box">
                     @foreach ($deal->messages as $message)
@@ -159,6 +161,45 @@
                         @endif
                     @endforeach
                 </div>
+
+                {{-- 取引完了モーダル --}}
+                <div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="completeModalLabel">取引が完了しました。</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            {{-- 評価を送信するフォーム --}}
+                            <form action="{{ route('deal.complete', ['deal' => $deal->id]) }}" class="form" method="post">
+                                @csrf
+                                <p class="form-title">今回の取引相手はどうでしたか？</p>
+                                <div class="form-rating">
+                                    <input class="form-rating__input" id="star5" name="rating" type="radio" value="5">
+                                    <label class="form-rating__label" for="star5"><i class="fa-solid fa-star"></i></label>
+
+                                    <input class="form-rating__input" id="star4" name="rating" type="radio" value="4">
+                                    <label class="form-rating__label" for="star4"><i class="fa-solid fa-star"></i></label>
+
+                                    <input class="form-rating__input" id="star3" name="rating" type="radio" value="3" checked>
+                                    <label class="form-rating__label" for="star3"><i class="fa-solid fa-star"></i></label>
+
+                                    <input class="form-rating__input" id="star2" name="rating" type="radio" value="2">
+                                    <label class="form-rating__label" for="star2"><i class="fa-solid fa-star"></i></label>
+
+                                    <input class="form-rating__input" id="star1" name="rating" type="radio" value="1">
+                                    <label class="form-rating__label" for="star1"><i class="fa-solid fa-star"></i></label>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="modal-btn btn-primary">送信する</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div class="mt-3" >
                     {{-- 3. メッセージ入力フォーム --}}
                     <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail"
@@ -189,6 +230,10 @@
         </main>
     </div>
     {{-- JavaScriptで表示を切り替える --}}
+
+@endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function showEditForm(messageId) {
             document.getElementById('message-content-' + messageId).style.display = 'none';

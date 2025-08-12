@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
             $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
-            $table->string('status');
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }
