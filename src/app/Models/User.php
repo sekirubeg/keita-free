@@ -88,4 +88,8 @@ class User extends Authenticatable
     {
         return $this->likes()->where('item_id', $itemId)->exists();
     }
+    public function receivedEvaluations()
+    {
+        return $this->hasMany(Evaluation::class, 'evaluated_id');
+    }
 }

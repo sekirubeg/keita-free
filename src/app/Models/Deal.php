@@ -66,4 +66,14 @@ class Deal extends Model
         // 取引相手は販売者(seller)
         return $this->seller;
     }
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
+    public function hasEvaluatedBy($userId)
+    {
+        // この取引の評価テーブルに、指定されたユーザーIDで評価したレコードが存在するかチェックする
+        return $this->evaluations()->where('evaluator_id', $userId)->exists();
+    }
 }

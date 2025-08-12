@@ -6,6 +6,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Deal;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
 
@@ -17,6 +18,12 @@ class MypageController extends Controller
 {
     $user = Auth::user();
     $page = $request->query('page', 'sell',); // デフォルトは "sell"
+
+    // ユーザーが受けた評価の平均を計算
+    $averageRating = $user->receivedEvaluations()->avg('rating');
+
+    // 平均評価を小数点以下1桁に整形
+    $formattedAverageRating = round($averageRating);
 
     $totalUnreadCount = Deal::where(function ($query) use ($user) {
         $query->where('buyer_id', $user->id)->orWhere('seller_id', $user->id);
@@ -33,7 +40,7 @@ class MypageController extends Controller
                 ->paginate(8);
 
 
-            return view('mypage.purchased', compact('user', 'items', 'totalUnreadCount'));
+            return view('mypage.purchased', compact('user', 'items', 'totalUnreadCount', 'formattedAverageRating'));
     }
     elseif($page === 'transaction') {
             // 取引中の商品
@@ -41,26 +48,26 @@ class MypageController extends Controller
                 $query->where('buyer_id', $user->id)
                     ->orWhere('seller_id', $user->id);
             })
-                ->whereNull('completed_at')
-                ->with(['item' => fn($query) => $query->withCount('likes')])
-                ->withCount([
-                    'messages as unread_count' => fn($query) => $query->where('sender_id', '!=', $user->id)->whereNull('read_at')
-                ])
-                ->latest() // 新しい取引から表示
-                ->paginate(8);
+            // ログイン中のユーザーがまだ評価していない取引に絞り込む
+            ->whereDoesntHave('evaluations', function ($query) use ($user) {
+                $query->where('evaluator_id', $user->id);
+            })
+            ->with(['item' => fn($query) => $query->withCount('likes')])
+            ->withCount([
+                'messages as unread_count' => fn($query) => $query->where('sender_id', '!=', $user->id)->whereNull('read_at')
+            ])
+            ->latest()
+            ->paginate(8);
 
             // 未読メッセージの合計件数を取得
-            // $totalUnreadCount = 0;
-            // foreach ($deals as $deal) {
-            //     $totalUnreadCount += $deal->unread_count;
-            // }
+            $totalUnreadCount = $deals->sum('unread_count');
 
-            return view('mypage.transaction', compact('user', 'deals', 'totalUnreadCount'));
+            return view('mypage.transaction', compact('user', 'deals', 'totalUnreadCount', 'formattedAverageRating'));
     }
     else {
         // 出品した商品
         $items = $user->items()->withCount('likes')->paginate(8);
-        return view('mypage.profile', compact('user', 'items', 'totalUnreadCount'));
+        return view('mypage.profile', compact('user', 'items', 'totalUnreadCount', 'formattedAverageRating'));
     }
 }
 

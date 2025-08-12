@@ -3,6 +3,7 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .index__title {
@@ -153,6 +154,7 @@
         .stars-inner::before {
             color: #f8ce0b;
         }
+
     </style>
 @endsection
 
@@ -171,8 +173,18 @@
                     <div>
                         <p style="font-size:2rem; font-weight:bold; margin-bottom:0; ">{{ $user->name }}</p>
                         {{-- 星評価の表示エリア --}}
-                        <div class="stars-outer">
-                            <div class="stars-inner"></div>
+                        <div class="user-rating">
+                            <div class="stars-display">
+                                {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
+                                @for ($i = 0; $i < $formattedAverageRating; $i++)
+                                <label class="form-rating-yellow"><i class="fa-solid fa-star"></i><label>
+                                @endfor
+
+                                {{-- 残りの星を灰色の星で表示 --}}
+                                @for ($i = 0; $i < 5 - $formattedAverageRating; $i++)
+                                <label class="form-rating"><i class="fa-solid fa-star"></i><label>
+                                @endfor
+                            </div>
                         </div>
                     </div>
 

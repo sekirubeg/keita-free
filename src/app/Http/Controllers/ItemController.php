@@ -11,6 +11,7 @@ use App\Models\Tag;
 use App\Models\Order;
 use App\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail; // Mailファサードをuse
 
 class ItemController extends Controller
 {
@@ -126,7 +127,14 @@ class ItemController extends Controller
             ->where('read_at', null) // 未読である
             ->update(['read_at' => now()]); // 現在時刻で更新
 
-        return view('item.transaction', compact("item", "user", "deal", "ongoingDeals", "authority"));
+        $shouldShowEvaluationModal = false;
+            if ($deal->completed_at && Auth::id() === $deal->seller_id) {
+                if (!$deal->hasEvaluatedBy(Auth::id())) {
+                    $shouldShowEvaluationModal = true;
+                }
+            }
+
+        return view('item.transaction', compact("item", "user", "deal", "ongoingDeals", "authority", "shouldShowEvaluationModal"));
     }
 
     public function complete(Request $request, Deal $deal)
@@ -143,10 +151,6 @@ class ItemController extends Controller
         $existingEvaluation = Evaluation::where('deal_id', $deal->id)
             ->where('evaluator_id', Auth::id())
             ->first();
-        if ($existingEvaluation) {
-            // 既に評価済みの場合は、エラーメッセージをリダイレクトで返す
-            return redirect()->route('item.index')->with('error', 'この取引は既に評価済みです。');
-        }
 
         // 4. データベースに評価を保存
         Evaluation::create([
@@ -159,9 +163,24 @@ class ItemController extends Controller
         // 5. 取引完了状態に更新
         $deal->update(['completed_at' => now()]);
 
+        // 評価されたユーザー（出品者）のメールアドレスを取得
+        $sellerEmail = $deal->seller->email;
+
+        // メール本文の作成
+        $mailBody = "購入者から評価が届きました。\n\n"
+            . "評価: {$request->rating}点\n\n";
+
+        // メールを送信
+        Mail::raw(
+            $mailBody,
+            function ($message) use ($sellerEmail) {
+                $message->to($sellerEmail)
+                    ->subject('購入者から評価が届きました');
+                });
         // 6. 完了後は商品一覧画面に遷移
         return redirect()->route('index');
     }
 }
+
 
 

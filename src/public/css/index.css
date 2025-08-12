@@ -11,3 +11,16 @@
 .recommend{
     color: #ff0000;
 }
+/* 星のラベル（非選択時のスタイル） */
+.form-rating {
+    color: #ccc; /* 灰色 */
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 2.5rem;
+}
+.form-rating-yellow {
+    color: #fff048; /* 黄色 */
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 2.5rem;
+}

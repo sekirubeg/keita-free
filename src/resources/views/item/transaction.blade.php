@@ -233,6 +233,7 @@
 
 @endsection
 @section('scripts')
+    @parent
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function showEditForm(messageId) {
@@ -244,5 +245,14 @@
             document.getElementById('message-content-' + messageId).style.display = 'flex';
             document.getElementById('edit-form-' + messageId).style.display = 'none';
         }
+
+        // 出品者側で、まだ評価を送信していない場合にモーダルを自動表示
+        @if (!$authority && $deal->completed_at && !$deal->hasEvaluatedBy(Auth::id()))
+            document.addEventListener('DOMContentLoaded', function () {
+                var myModal = new bootstrap.Modal(document.getElementById('completeModal'));
+                myModal.show();
+            });
+        @endif
     </script>
 @endsection
+
