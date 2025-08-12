@@ -165,22 +165,27 @@ class ItemController extends Controller
         ]);
 
         // 5. 取引完了状態に更新
-        $deal->update(['completed_at' => now()]);
+
 
         // 評価されたユーザー（出品者）のメールアドレスを取得
-        $sellerEmail = $deal->seller->email;
+        if ($deal->completed_at === null) {
+            // 評価されたユーザー（出品者）のメールアドレスを取得
+            $sellerEmail = $deal->seller->email;
 
-        // メール本文の作成
-        $mailBody = "購入者から評価が届きました。\n\n"
-            . "評価: {$request->rating}点\n\n";
+            // メール本文の作成
+            $mailBody = "購入者から評価が届きました。\n\n"
+                . "評価: {$request->rating}点\n\n";
 
-        // メールを送信
-        Mail::raw(
-            $mailBody,
-            function ($message) use ($sellerEmail) {
-                $message->to($sellerEmail)
-                    ->subject('購入者から評価が届きました');
+            // メールを送信
+            Mail::raw(
+                $mailBody,
+                function ($message) use ($sellerEmail) {
+                    $message->to($sellerEmail)
+                        ->subject('購入者から評価が届きました');
                 });
+        }
+
+        $deal->update(['completed_at' => now()]);
         // 6. 完了後は商品一覧画面に遷移
         return redirect()->route('index');
     }
