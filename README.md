@@ -35,6 +35,23 @@ Stripeテストモードでの決済が可能です。必要に応じて .env �
 STRIPE_PUBLIC_KEY=your_test_key
 STRIPE_SECRET_KEY=your_test_secret
 ```
+## main認証のためのmailtrapの設定
+
+### Mailtrap のアカウント作成
+
+https://mailtrap.io/ にアクセスし、無料アカウントを作成してください。
+その後ダッシュボードにログインし、Inbox を作成してください
+そしてInbox の「SMTP Settings」を開き、Laravel 用の接続情報を確認してください。
+
+### .env にSMTP情報を設定
+Mailtrapの設定にある「Laravel 9+」用の情報を、.env に貼り付けます。
+```
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=
+MAIL_PASSWORD=
+```
 ### PHP.Unitによるテスト
 ログアウトのテストをするときはweb.phpにある”テスト時のlogoutルートをコメントアウトして行ってください。
 いいね機能のテストおよび、支払い方法選択のテストは、javaScriptの変化を捉えなければならず、<br>
