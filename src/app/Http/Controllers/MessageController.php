@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class MessageController extends Controller
 {
     //
-    public function store(Request $request)
+    public function store(MessageRequest $request)
     {
         $item = Item::findOrFail($request->item_id);
         $deal = Deal::where('item_id', $item->id)

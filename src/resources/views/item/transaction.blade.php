@@ -205,11 +205,16 @@
                     <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail"
                         style="max-width: 150px;" id="img">
                 </div>
-
+                @error('content')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+                @error('image_at')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 {{-- 4. メッセージ入力フォーム --}}
                 <div class="message-form-container">
                     <form action="{{ route('transaction.message', ['deal_id' => $deal->id]) }}" method="POST"
-                        class="message-form" enctype="multipart/form-data">
+                        class="message-form" enctype="multipart/form-data" novalidate>
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $deal->item_id }}">
                         <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください" required>

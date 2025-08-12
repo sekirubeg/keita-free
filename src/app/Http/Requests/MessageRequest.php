@@ -23,6 +23,16 @@ class MessageRequest extends FormRequest
     {
         return [
             //
+            'content' => 'required|max:400',
+            'image_at' => 'nullable|mimes:jpeg,png',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'content.required' => '本文を入力してください',
+            'content.max' => '本文は400文字以内で入力してください',
+            'image_at.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
         ];
     }
 }
