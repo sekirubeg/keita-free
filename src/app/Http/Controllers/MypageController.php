@@ -9,7 +9,7 @@ use App\Models\Deal;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
-
+use Illuminate\Support\Facades\DB;
 
 class MypageController extends Controller
 {
@@ -53,14 +53,17 @@ class MypageController extends Controller
                 $query->where('evaluator_id', $user->id);
             })
             ->with(['item' => fn($query) => $query->withCount('likes')])
-            ->withCount([
-                'messages as unread_count' => fn($query) => $query->where('sender_id', '!=', $user->id)->whereNull('read_at')
-            ])
-            ->latest()
+            ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
+            ->groupBy('deals.id')
+            ->select('deals.*', DB::raw('COUNT(CASE WHEN messages.sender_id != ' . $user->id . ' AND messages.read_at IS NULL THEN 1 END) as unread_count'))
+            ->orderByDesc(DB::raw('MAX(messages.created_at)')) // 最新のメッセージ日時で降順に並べ替え
             ->paginate(8);
 
-            // 未読メッセージの合計件数を取得
-            $totalUnreadCount = $deals->sum('unread_count');
+        // 未読メッセージの合計件数を取得
+        $totalUnreadCount = 0;
+        foreach ($deals as $deal) {
+            $totalUnreadCount += $deal->unread_count;
+        }
 
             return view('mypage.transaction', compact('user', 'deals', 'totalUnreadCount', 'formattedAverageRating'));
     }

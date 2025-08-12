@@ -106,8 +106,10 @@ class ItemController extends Controller
             $ongoingDeals = Deal::where('seller_id', $user->id)
                 ->where('id', '!=', $deal->id) // 今見ている取引は除外
                 ->with('item', 'buyer', 'seller')
+                ->whereDoesntHave('evaluations', function ($query) use ($user) {
+                    $query->where('evaluator_id', $user->id);
+                })
                 ->latest()
-                ->limit(10)
                 ->get();
             $authority = false;
         } else {
@@ -116,8 +118,10 @@ class ItemController extends Controller
             $ongoingDeals = Deal::where('buyer_id', $user->id)
                 ->where('id', '!=', $deal->id) // 今見ている取引は除外
                 ->with('item', 'buyer', 'seller')
+                ->whereDoesntHave('evaluations', function ($query) use ($user) {
+                    $query->where('evaluator_id', $user->id);
+                })
                 ->latest()
-                ->limit(10)
                 ->get();
             $authority = true;
         }
