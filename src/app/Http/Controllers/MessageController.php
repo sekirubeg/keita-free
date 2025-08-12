@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Deal;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
@@ -36,16 +37,23 @@ class MessageController extends Controller
         return redirect()->route('item.transaction', ['id' => $item->id]);
     }
 
-    public function update(Request $request, Message $message)
+    public function update(MessageRequest $request, Message $message)
     {
         // 認可ポリシーなどで、メッセージの所有者かを確認する
         // $this->authorize('update', $message);
 
-        $request->validate([
-            'content' => 'required|string|max:255',
-        ]);
-
         $message->content = $request->input('content');
+        // 新しい画像がアップロードされた場合
+        if ($request->hasFile('image_at')) {
+            // 古い画像があれば削除
+            if ($message->image_at) {
+                Storage::disk('public')->delete($message->image_at);
+            }
+
+            // 新しい画像を保存してパスを更新
+            $path = $request->file('image_at')->store('images', 'public');
+            $message->image_at = $path;
+        }
         $message->save();
 
         // 適切なリダイレクト先を指定

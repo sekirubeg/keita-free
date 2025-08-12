@@ -164,9 +164,6 @@ class ItemController extends Controller
             'rating' => $request->rating,
         ]);
 
-        // 5. 取引完了状態に更新
-
-
         // 評価されたユーザー（出品者）のメールアドレスを取得
         if ($deal->completed_at === null) {
             // 評価されたユーザー（出品者）のメールアドレスを取得

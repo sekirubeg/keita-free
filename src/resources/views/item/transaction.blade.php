@@ -111,15 +111,28 @@
 
                                 {{-- メッセージ編集フォーム（初期状態は非表示） --}}
                                 <div id="edit-form-{{ $message->id }}" style="display: none;">
-                                    {{-- メッセージ編集フォーム --}}
-                                    <form action="{{ route('transaction.message.update', $message->id) }}" method="POST">
+                                    <form action="{{ route('transaction.message.update', $message->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('put')
-                                        <input type="text" name="content" value="{{ $message->content }}"
-                                            class="form-control" required>
-                                        <button type="submit" class="btn btn-primary btn-sm">更新</button>
-                                        <button type="button" onclick="cancelEdit({{ $message->id }})"
-                                            class="btn btn-secondary btn-sm">キャンセル</button>
+                                        <input type="text" name="content" value="{{ $message->content }}" class="form-control mb-2" required>
+
+                                        {{-- 新しい画像アップロードフィールド --}}
+                                        <div class="input-group mb-2">
+                                            <input type="file" class="form-control" id="editImageInput-{{ $message->id }}" name="image_at">
+                                        </div>
+
+                                        {{-- 既存の画像を表示（存在する場合） --}}
+                                        @if ($message->image_at)
+                                            <div class="mb-2">
+                                                <p>現在の画像:</p>
+                                                <img src="{{ asset('storage/' . $message->image_at) }}" alt="現在の画像" class="img-thumbnail" style="max-width: 150px;">
+                                            </div>
+                                        @endif
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary btn-sm me-2">更新</button>
+                                            <button type="button" onclick="cancelEdit({{ $message->id }})" class="btn btn-secondary btn-sm">キャンセル</button>
+                                        </div>
                                     </form>
                                 </div>
 
