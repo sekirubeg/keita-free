@@ -51,7 +51,7 @@
 
 
         {{-- 2. メインコンテンツエリア --}}
-        <main class="main-content">
+        <main class="main-content" >
             <div class="transaction-container">
                 {{-- 1. ヘッダーエリア --}}
                 <div class="transaction-header">
@@ -237,8 +237,8 @@
                                 画像を追加
                             </button>
                         </div>
-                        <button type="submit" class="send-button">
-                            <i class="fas fa-paper-plane"></i>
+                        <button type="submit" class="send-button" >
+                            <img src="{{ asset('storage/images/button.jpg') }}" alt="送信">
                         </button>
                     </form>
                 </div>

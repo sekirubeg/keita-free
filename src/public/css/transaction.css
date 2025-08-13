@@ -1,3 +1,4 @@
+
 .transaction-container {
     max-width: 800px;
     width: 50%;
@@ -7,7 +8,7 @@
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    height: 85vh;
+    height: 87vh;
 }
 
 .transaction-header {
@@ -25,7 +26,7 @@
 }
 
 .btn-complete-deal {
-    background-color: #ef4444;
+    background-color: #ff8282;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -132,8 +133,6 @@
 
 .message-form-container {
     padding: 1rem 1.5rem;
-    border-top: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
 }
 
 .message-form {
@@ -217,7 +216,11 @@
     margin-bottom: 1rem;
     text-align: center;
 }
+.image-upload-wrapper{
+    display: flex;
+    align-items: center;
 
+}
 .nav-link {
     text-decoration: none;
     font-size: 1.2rem;
@@ -326,4 +329,13 @@
 
 .modal-md{
     max-width: 600px;
+}
+.send-button{
+    width: 10%;
+}
+.send-button img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+
 }
