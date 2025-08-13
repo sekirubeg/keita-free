@@ -52,12 +52,12 @@ MAIL_PORT=2525
 MAIL_USERNAME=
 MAIL_PASSWORD=
 ```
+
+## test 環境構築
 ### PHP.Unitによるテスト
 ログアウトのテストをするときはweb.phpにある”テスト時のlogoutルートをコメントアウトして行ってください。
 いいね機能のテストおよび、支払い方法選択のテストは、javaScriptの変化を捉えなければならず、<br>
 php.unitだけではテストすることが不可能だったため、テストから除外しています。
-
-## test 環境構築
 ```
 docker-compose exec mysql bash
 mysql -u root -p
