@@ -154,7 +154,6 @@
         .stars-inner::before {
             color: #f8ce0b;
         }
-
     </style>
 @endsection
 
@@ -173,20 +172,20 @@
                     <div>
                         <p style="font-size:2rem; font-weight:bold; margin-bottom:0; ">{{ $user->name }}</p>
                         {{-- 星評価の表示エリア --}}
-                        @if($formattedAverageRating > 0)
-                        <div class="user-rating">
-                            <div class="stars-display">
-                                {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
-                                @for ($i = 0; $i < $formattedAverageRating; $i++)
-                                <label class="form-rating-yellow"><i class="fa-solid fa-star"></i><label>
-                                @endfor
+                        @if ($formattedAverageRating > 0)
+                            <div class="user-rating">
+                                <div class="stars-display">
+                                    {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
+                                    @for ($i = 0; $i < $formattedAverageRating; $i++)
+                                        <label class="form-rating-yellow"><i class="fa-solid fa-star"></i><label>
+                                    @endfor
 
-                                {{-- 残りの星を灰色の星で表示 --}}
-                                @for ($i = 0; $i < 5 - $formattedAverageRating; $i++)
-                                <label class="form-rating"><i class="fa-solid fa-star"></i><label>
-                                @endfor
+                                    {{-- 残りの星を灰色の星で表示 --}}
+                                    @for ($i = 0; $i < 5 - $formattedAverageRating; $i++)
+                                        <label class="form-rating"><i class="fa-solid fa-star"></i><label>
+                                    @endfor
+                                </div>
                             </div>
-                        </div>
                         @endif
                     </div>
 
@@ -204,10 +203,12 @@
         <a class="caption" href="{{ route('mypage', ['page' => 'buy']) }}">購入した商品</a>
         <a class="caption recommend" style="display: flex; align-items: center;">
             取引中の商品
-            @if($totalUnreadCount > 0)<span class="unread-badge"
-                style="color: white; background: #FF0000; margin-left:10px; width:30px; height:28px; border-radius:40%; display: flex; justify-content: center; align-items: center;">
-                {{ $totalUnreadCount }}
-            </span>@endif
+            @if ($totalUnreadCount > 0)
+                <span class="unread-badge"
+                    style="color: white; background: #FF0000; margin-left:10px; width:30px; height:28px; border-radius:40%; display: flex; justify-content: center; align-items: center;">
+                    {{ $totalUnreadCount }}
+                </span>
+            @endif
         </a>
     </div>
 

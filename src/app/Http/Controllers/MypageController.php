@@ -6,7 +6,6 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Deal;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddressRequest;
 use Illuminate\Support\Facades\DB;
@@ -15,25 +14,25 @@ class MypageController extends Controller
 {
     //
     public function index(Request $request)
-{
-    $user = Auth::user();
-    $page = $request->query('page', 'sell',); // デフォルトは "sell"
+    {
+        $user = Auth::user();
+        $page = $request->query('page', 'sell',); // デフォルトは "sell"
 
-    // ユーザーが受けた評価の平均を計算
-    $averageRating = $user->receivedEvaluations()->avg('rating');
+        // ユーザーが受けた評価の平均を計算
+        $averageRating = $user->receivedEvaluations()->avg('rating');
 
-    // 平均評価を小数点以下1桁に整形
-    $formattedAverageRating = round($averageRating);
+        // 平均評価を小数点以下1桁に整形
+        $formattedAverageRating = round($averageRating);
 
-    $totalUnreadCount = Deal::where(function ($query) use ($user) {
-        $query->where('buyer_id', $user->id)->orWhere('seller_id', $user->id);
-    })
-    ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
-    ->where('messages.sender_id', '!=', $user->id)
-    ->whereNull('messages.read_at')
-    ->count();
+        $totalUnreadCount = Deal::where(function ($query) use ($user) {
+            $query->where('buyer_id', $user->id)->orWhere('seller_id', $user->id);
+        })
+            ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
+            ->where('messages.sender_id', '!=', $user->id)
+            ->whereNull('messages.read_at')
+            ->count();
 
-    if ($page === 'buy') {
+        if ($page === 'buy') {
             // 購入した商品（orders 経由で item を取得）
             $items = Item::whereIn('id', Order::where('user_id', $user->id)->pluck('item_id'))
                 ->withCount('likes')
@@ -41,38 +40,36 @@ class MypageController extends Controller
 
 
             return view('mypage.purchased', compact('user', 'items', 'totalUnreadCount', 'formattedAverageRating'));
-    }
-    elseif($page === 'transaction') {
+        } elseif ($page === 'transaction') {
             // 取引中の商品
             $deals = Deal::where(function ($query) use ($user) {
                 $query->where('buyer_id', $user->id)
                     ->orWhere('seller_id', $user->id);
             })
-            // ログイン中のユーザーがまだ評価していない取引に絞り込む
-            ->whereDoesntHave('evaluations', function ($query) use ($user) {
-                $query->where('evaluator_id', $user->id);
-            })
-            ->with(['item' => fn($query) => $query->withCount('likes')])
-            ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
-            ->groupBy('deals.id')
-            ->select('deals.*', DB::raw('COUNT(CASE WHEN messages.sender_id != ' . $user->id . ' AND messages.read_at IS NULL THEN 1 END) as unread_count'))
-            ->orderByDesc(DB::raw('MAX(messages.created_at)')) // 最新のメッセージ日時で降順に並べ替え
-            ->paginate(8);
+                // ログイン中のユーザーがまだ評価していない取引に絞り込む
+                ->whereDoesntHave('evaluations', function ($query) use ($user) {
+                    $query->where('evaluator_id', $user->id);
+                })
+                ->with(['item' => fn($query) => $query->withCount('likes')])
+                ->leftJoin('messages', 'deals.id', '=', 'messages.deal_id')
+                ->groupBy('deals.id')
+                ->select('deals.*', DB::raw('COUNT(CASE WHEN messages.sender_id != ' . $user->id . ' AND messages.read_at IS NULL THEN 1 END) as unread_count'))
+                ->orderByDesc(DB::raw('MAX(messages.created_at)')) // 最新のメッセージ日時で降順に並べ替え
+                ->paginate(8);
 
-        // 未読メッセージの合計件数を取得
-        $totalUnreadCount = 0;
-        foreach ($deals as $deal) {
-            $totalUnreadCount += $deal->unread_count;
-        }
+            // 未読メッセージの合計件数を取得
+            $totalUnreadCount = 0;
+            foreach ($deals as $deal) {
+                $totalUnreadCount += $deal->unread_count;
+            }
 
             return view('mypage.transaction', compact('user', 'deals', 'totalUnreadCount', 'formattedAverageRating'));
+        } else {
+            // 出品した商品
+            $items = $user->items()->withCount('likes')->paginate(8);
+            return view('mypage.profile', compact('user', 'items', 'totalUnreadCount', 'formattedAverageRating'));
+        }
     }
-    else {
-        // 出品した商品
-        $items = $user->items()->withCount('likes')->paginate(8);
-        return view('mypage.profile', compact('user', 'items', 'totalUnreadCount', 'formattedAverageRating'));
-    }
-}
 
     public function edit(Item $item)
     {
@@ -98,5 +95,4 @@ class MypageController extends Controller
         $user->save();
         return redirect()->route('index');
     }
-
 }

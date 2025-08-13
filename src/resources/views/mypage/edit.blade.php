@@ -78,10 +78,9 @@
                     @if ($user->image_at)
                         <div class="mt-3" style=" height:150px ; width: 150px; overflow: hidden;">
                             <img src="{{ asset(isset($user->image_at) ? 'storage/' . $user->image_at : 'src/default.jpeg') }}"
-                            alt="プロフィール画像"
-                            class="img-thumbnail"
-                            style="max-width: 150px; border-radius:50%; width:100%; height:100%; object-fit:cover;"
-                            id="img">
+                                alt="プロフィール画像" class="img-thumbnail"
+                                style="max-width: 150px; border-radius:50%; width:100%; height:100%; object-fit:cover;"
+                                id="img">
                         </div>
                     @endif
                     {{-- このonchangeがプレビューを表示させる。 --}}

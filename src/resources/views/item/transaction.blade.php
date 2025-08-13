@@ -51,7 +51,7 @@
 
 
         {{-- 2. メインコンテンツエリア --}}
-        <main class="main-content" >
+        <main class="main-content">
             <div class="transaction-container">
                 {{-- 1. ヘッダーエリア --}}
                 <div class="transaction-header">
@@ -62,7 +62,8 @@
                         <h2>「{{ $deal->partner()->name }}」さんとの取引画面</h2>
                     </div>
                     @if ($authority)
-                        <button type="button" class="btn-complete-deal" data-bs-toggle="modal" data-bs-target="#completeModal">取引を完了する</button>
+                        <button type="button" class="btn-complete-deal" data-bs-toggle="modal"
+                            data-bs-target="#completeModal">取引を完了する</button>
                     @endif
                 </div>
 
@@ -98,7 +99,8 @@
                                 <div id="message-content-{{ $message->id }}"
                                     style="display:flex; flex-direction:row-reverse; margin-top: 1vh; align-items: flex-end;">
 
-                                    <div class="message-body" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
+                                    <div class="message-body"
+                                        style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
 
                                         <p class="message-content">{{ $message->content }}</p>
                                         @if ($message->image_at)
@@ -111,27 +113,32 @@
 
                                 {{-- メッセージ編集フォーム（初期状態は非表示） --}}
                                 <div id="edit-form-{{ $message->id }}" style="display: none;">
-                                    <form action="{{ route('transaction.message.update', $message->id) }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('transaction.message.update', $message->id) }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         @method('put')
-                                        <input type="text" name="content" value="{{ $message->content }}" class="form-control mb-2" required>
+                                        <input type="text" name="content" value="{{ $message->content }}"
+                                            class="form-control mb-2" required>
 
                                         {{-- 新しい画像アップロードフィールド --}}
                                         <div class="input-group mb-2">
-                                            <input type="file" class="form-control" id="editImageInput-{{ $message->id }}" name="image_at">
+                                            <input type="file" class="form-control"
+                                                id="editImageInput-{{ $message->id }}" name="image_at">
                                         </div>
 
                                         {{-- 既存の画像を表示（存在する場合） --}}
                                         @if ($message->image_at)
                                             <div class="mb-2">
                                                 <p>現在の画像:</p>
-                                                <img src="{{ asset('storage/' . $message->image_at) }}" alt="現在の画像" class="img-thumbnail" style="max-width: 150px;">
+                                                <img src="{{ asset('storage/' . $message->image_at) }}" alt="現在の画像"
+                                                    class="img-thumbnail" style="max-width: 150px;">
                                             </div>
                                         @endif
 
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary btn-sm me-2">更新</button>
-                                            <button type="button" onclick="cancelEdit({{ $message->id }})" class="btn btn-secondary btn-sm">キャンセル</button>
+                                            <button type="button" onclick="cancelEdit({{ $message->id }})"
+                                                class="btn btn-secondary btn-sm">キャンセル</button>
                                         </div>
                                     </form>
                                 </div>
@@ -160,10 +167,12 @@
                                 </div>
                                 <div style="display:flex; margin-top: 1vh; ">
 
-                                    <div class="message-body" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;">
+                                    <div class="message-body"
+                                        style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;">
                                         {{-- メッセージ内容と画像 --}}
 
-                                        <p class="message-content" style="display: inline-block;">{{ $message->content }}</p>
+                                        <p class="message-content" style="display: inline-block;">{{ $message->content }}
+                                        </p>
                                         @if ($message->image_at)
                                             <img src="{{ asset('storage/' . $message->image_at) }}" class="message-image"
                                                 alt="メッセージ画像">
@@ -176,32 +185,45 @@
                 </div>
 
                 {{-- 取引完了モーダル --}}
-                <div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
+                <div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel"
+                    aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="completeModalLabel">取引が完了しました。</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             {{-- 評価を送信するフォーム --}}
-                            <form action="{{ route('deal.complete', ['deal' => $deal->id]) }}" class="form" method="post">
+                            <form action="{{ route('deal.complete', ['deal' => $deal->id]) }}" class="form"
+                                method="post">
                                 @csrf
                                 <p class="form-title">今回の取引相手はどうでしたか？</p>
                                 <div class="form-rating">
-                                    <input class="form-rating__input" id="star5" name="rating" type="radio" value="5">
-                                    <label class="form-rating__label" for="star5"><i class="fa-solid fa-star"></i></label>
+                                    <input class="form-rating__input" id="star5" name="rating" type="radio"
+                                        value="5">
+                                    <label class="form-rating__label" for="star5"><i
+                                            class="fa-solid fa-star"></i></label>
 
-                                    <input class="form-rating__input" id="star4" name="rating" type="radio" value="4">
-                                    <label class="form-rating__label" for="star4"><i class="fa-solid fa-star"></i></label>
+                                    <input class="form-rating__input" id="star4" name="rating" type="radio"
+                                        value="4">
+                                    <label class="form-rating__label" for="star4"><i
+                                            class="fa-solid fa-star"></i></label>
 
-                                    <input class="form-rating__input" id="star3" name="rating" type="radio" value="3" checked>
-                                    <label class="form-rating__label" for="star3"><i class="fa-solid fa-star"></i></label>
+                                    <input class="form-rating__input" id="star3" name="rating" type="radio"
+                                        value="3" checked>
+                                    <label class="form-rating__label" for="star3"><i
+                                            class="fa-solid fa-star"></i></label>
 
-                                    <input class="form-rating__input" id="star2" name="rating" type="radio" value="2">
-                                    <label class="form-rating__label" for="star2"><i class="fa-solid fa-star"></i></label>
+                                    <input class="form-rating__input" id="star2" name="rating" type="radio"
+                                        value="2">
+                                    <label class="form-rating__label" for="star2"><i
+                                            class="fa-solid fa-star"></i></label>
 
-                                    <input class="form-rating__input" id="star1" name="rating" type="radio" value="1">
-                                    <label class="form-rating__label" for="star1"><i class="fa-solid fa-star"></i></label>
+                                    <input class="form-rating__input" id="star1" name="rating" type="radio"
+                                        value="1">
+                                    <label class="form-rating__label" for="star1"><i
+                                            class="fa-solid fa-star"></i></label>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="modal-btn btn-primary">送信する</button>
@@ -213,7 +235,7 @@
 
 
 
-                <div class="mt-3" >
+                <div class="mt-3">
                     {{-- 3. メッセージ入力フォーム --}}
                     <img src="{{ asset('storage/' . 'images/blank_image.png') }}" class="img-thumbnail"
                         style="max-width: 150px;" id="img">
@@ -230,14 +252,17 @@
                         class="message-form" enctype="multipart/form-data" novalidate>
                         @csrf
                         <input type="hidden" name="item_id" value="{{ $deal->item_id }}">
-                        <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください" value="{{ old('content') }}" required>
+                        <input type="text" name="content" class="message-input" placeholder="取引メッセージを記入してください"
+                            value="{{ old('content') }}" required>
                         <div class="image-upload-wrapper">
-                            <input type="file" id="messageImageInput" name="image_at" accept="image/*" style="display: none;" onchange="previewImage(this)">
-                            <button type="button" onclick="document.getElementById('messageImageInput').click()" class="image-upload-button">
+                            <input type="file" id="messageImageInput" name="image_at" accept="image/*"
+                                style="display: none;" onchange="previewImage(this)">
+                            <button type="button" onclick="document.getElementById('messageImageInput').click()"
+                                class="image-upload-button">
                                 画像を追加
                             </button>
                         </div>
-                        <button type="submit" class="send-button" >
+                        <button type="submit" class="send-button">
                             <img src="{{ asset('storage/images/button.jpg') }}" alt="送信">
                         </button>
                     </form>
@@ -290,7 +315,7 @@
 
         // 出品者側で、まだ評価を送信していない場合にモーダルを自動表示
         @if (!$authority && $deal->completed_at && !$deal->hasEvaluatedBy(Auth::id()))
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 var myModal = new bootstrap.Modal(document.getElementById('completeModal'));
                 myModal.show();
             });

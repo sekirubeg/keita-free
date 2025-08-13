@@ -102,7 +102,8 @@
         .text-muted {
             display: none;
         }
-         .profile-buttons .profile {
+
+        .profile-buttons .profile {
             color: #ff5555;
             background-color: transparent;
             border: 1px solid #ff5555;
@@ -115,40 +116,44 @@
             background-color: #ff5555;
             color: white;
         }
+
         .stars-outer {
-        position: relative;
-        display: inline-block;
+            position: relative;
+            display: inline-block;
         }
 
         .stars-inner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        width: 0; /* JavaScript or server-side code will set this */
+            position: absolute;
+            top: 0;
+            left: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            /* JavaScript or server-side code will set this */
         }
 
         /* Both star containers use the Font Awesome font and content */
         .stars-outer::before,
         .stars-inner::before {
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        content: "\f005 \f005 \f005 \f005 \f005"; /* 5 stars */
-        font-size: 2rem; /* この行を追加または変更 */
-        letter-spacing: 0.3rem; /* この行を追加 */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            content: "\f005 \f005 \f005 \f005 \f005";
+            /* 5 stars */
+            font-size: 2rem;
+            /* この行を追加または変更 */
+            letter-spacing: 0.3rem;
+            /* この行を追加 */
         }
 
         /* Gray stars for the background */
         .stars-outer::before {
-        color: #ccc;
+            color: #ccc;
         }
 
         /* Gold stars for the foreground */
         .stars-inner::before {
-        color: #f8ce0b;
+            color: #f8ce0b;
         }
-
     </style>
 @endsection
 
@@ -167,20 +172,20 @@
                     <div>
                         <p style="font-size:2rem; font-weight:bold; margin-bottom:0; ">{{ $user->name }}</p>
                         {{-- 星評価の表示エリア --}}
-                        @if($formattedAverageRating > 0)
-                        <div class="user-rating">
-                            <div class="stars-display">
-                                {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
-                                @for ($i = 0; $i < $formattedAverageRating; $i++)
-                                <label class="form-rating-yellow"><i class="fa-solid fa-star"></i><label>
-                                @endfor
+                        @if ($formattedAverageRating > 0)
+                            <div class="user-rating">
+                                <div class="stars-display">
+                                    {{-- 四捨五入した平均評価の数だけ黄色の星を表示 --}}
+                                    @for ($i = 0; $i < $formattedAverageRating; $i++)
+                                        <label class="form-rating-yellow"><i class="fa-solid fa-star"></i><label>
+                                    @endfor
 
-                                {{-- 残りの星を灰色の星で表示 --}}
-                                @for ($i = 0; $i < 5 - $formattedAverageRating; $i++)
-                                <label class="form-rating"><i class="fa-solid fa-star"></i><label>
-                                @endfor
+                                    {{-- 残りの星を灰色の星で表示 --}}
+                                    @for ($i = 0; $i < 5 - $formattedAverageRating; $i++)
+                                        <label class="form-rating"><i class="fa-solid fa-star"></i><label>
+                                    @endfor
+                                </div>
                             </div>
-                        </div>
                         @endif
                     </div>
 
@@ -196,10 +201,14 @@
     <div class="index__title">
         <a class="caption" href="{{ route('mypage') }}">出品した商品</a>
         <a class="caption recommend">購入した商品</a>
-        <a class="caption" href="{{ route('mypage', ['page' => 'transaction']) }}" style="display: flex; align-items: center;">取引中の商品            @if($totalUnreadCount > 0)<span class="unread-badge"
-            style="color: white; background: #FF0000; margin-left:10px; width:30px; height:28px; border-radius:40%; display: flex; justify-content: center; align-items: center;">
-            {{ $totalUnreadCount }}
-        </span>@endif</a>
+        <a class="caption" href="{{ route('mypage', ['page' => 'transaction']) }}"
+            style="display: flex; align-items: center;">取引中の商品 @if ($totalUnreadCount > 0)
+                <span class="unread-badge"
+                    style="color: white; background: #FF0000; margin-left:10px; width:30px; height:28px; border-radius:40%; display: flex; justify-content: center; align-items: center;">
+                    {{ $totalUnreadCount }}
+                </span>
+            @endif
+        </a>
     </div>
 
     <div class="row unity">
