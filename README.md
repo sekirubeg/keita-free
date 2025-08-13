@@ -127,6 +127,21 @@ php artisan migrate --env=testing
 php artisan test
 ```
 
+## シーディングされているデータ
+```
+（１）name     : 出品者A
+     email    : sellerA@example.com
+     password : sekirubeg
+
+（２）name     : 出品者B
+     email    : sellerB@example.com
+     password : sekirubeg
+
+（３）name     : 取引なしユーザー
+     email    : no_deal@example.com
+     password : sekirubeg
+```
+※出品者AはCO01~CO05、出品者BはCO06~CO10の商品を出品しています。
 ## 使用技術
 ```
 PHP 8.2.28
