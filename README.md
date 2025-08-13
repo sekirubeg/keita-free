@@ -141,7 +141,7 @@ php artisan test
      email    : no_deal@example.com
      password : sekirubeg
 ```
-※出品者AはCO01~CO05、出品者BはCO06~CO10の商品を出品しています。
+※出品者AはCO01〜CO05、出品者BはCO06〜CO10の商品を出品しています。
 ## 使用技術
 ```
 PHP 8.2.28
